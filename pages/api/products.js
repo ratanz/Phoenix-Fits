@@ -29,15 +29,23 @@ export default async function handler(req, res) {
       }
 
       try {
-        const { name, description, price, discount } = fields
+        const name = Array.isArray(fields.name) ? fields.name[0] : fields.name
+        const description = Array.isArray(fields.description) ? fields.description[0] : fields.description
+        const price = Array.isArray(fields.price) ? fields.price[0] : fields.price
+        const discount = Array.isArray(fields.discount) ? fields.discount[0] : fields.discount
+
         let imagePath = ''
 
-        if (files.image) {
+        if (files.image && files.image.length > 0) {
           const file = files.image[0]
           const fileName = `${Date.now()}-${file.originalFilename}`
-          const newPath = path.join(process.cwd(), 'public', 'uploads', fileName)
+          const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
+          await fs.mkdir(uploadsDir, { recursive: true })
+          const newPath = path.join(uploadsDir, fileName)
           await fs.copyFile(file.filepath, newPath)
           imagePath = `/uploads/${fileName}`
+        } else {
+          imagePath = '/default-product-image.jpg'
         }
 
         const product = new Product({
@@ -51,6 +59,7 @@ export default async function handler(req, res) {
         await product.save()
         res.status(201).json(product)
       } catch (error) {
+        console.error('Error creating product:', error)
         res.status(500).json({ error: 'Unable to create product' })
       }
     })

@@ -6,10 +6,12 @@ import Link from 'next/link'
 import { ShoppingCart, Search } from 'lucide-react'
 
 interface Product {
-  id: string | number;
+  _id: string;
   name: string;
+  description: string;
   image: string;
-  price: string;
+  price: number;
+  discount?: number;
   status?: string;
 }
 
@@ -17,16 +19,16 @@ const categories = ['New', 'Hoodies', 'Tees', 'Jackets', 'Pants', 'Skate']
 
 export default function CollectionPage() {
 
-    const [products, setProducts] = useState<Product[]>([])
+  const [products, setProducts] = useState<Product[]>([])
 
-    useEffect(() => {
-        async function fetchProducts() {
-            const response = await fetch('/api/products')
-            const data = await response.json()
-            setProducts(data as Product[])
-        }
-        fetchProducts()
-    }, [])
+  useEffect(() => {
+    async function fetchProducts() {
+      const response = await fetch('/api/products')
+      const data = await response.json()
+      setProducts(data as Product[])
+    }
+    fetchProducts()
+  }, [])
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -72,7 +74,7 @@ export default function CollectionPage() {
             <div className="w-full h-full">
               <div className="flex gap-8 flex-row justify-between">
                 {products.map((product) => (
-                  <div key={product.id} className="relative group">
+                  <div key={product._id} className="relative group">
                     <div className="w-full h-full mb-4">
                       <Image
                         src={product.image}
@@ -84,7 +86,16 @@ export default function CollectionPage() {
                       />
                     </div>
                     <h3 className="text-sm font-medium">{product.name}</h3>
-                    <p className="text-sm text-gray-400">{product.price}</p>
+                    <p className="text-sm text-gray-400">
+                      ${product.discount ? (
+                        <>
+                          <span className="line-through">{product.price.toFixed(2)}</span>{' '}
+                          ${(product.price - product.discount).toFixed(2)}
+                        </>
+                      ) : (
+                        product.price.toFixed(2)
+                      )}
+                    </p>
                     {product.status && (
                       <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
                         {product.status}
