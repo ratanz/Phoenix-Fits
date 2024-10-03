@@ -1,18 +1,33 @@
-import React from 'react'
+'use client'
+
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingCart, Search } from 'lucide-react'
 
-const products = [
-  { id: 1, name: 'PALACE X NEW ERA BLACK/RED', price: '£55.00', status: 'sold out', image: 'https://adamstheme.com/cdn/shop/files/FRONBT_CAOP_2.png?v=1724186800&width=600' },
-  { id: 2, name: 'PALACE X NEW ERA REALTREE CAMO', price: '£55.00', status: 'sold out', image: 'https://adamstheme.com/cdn/shop/files/GREY_ZI.png?v=1724186765&width=600' },
-  { id: 3, name: 'PALACE X NEW ERA BLUE/RED', price: '£55.00', status: '', image: 'https://adamstheme.com/cdn/shop/files/DALLAS.png?v=1724186716&width=600' },
-  { id: 4, name: 'SMALL TRI HOODIE CAMO', price: '£100.00', status: '', image:'https://adamstheme.com/cdn/shop/products/greyjoggers.png?v=1707167188&width=600' },
-]
+interface Product {
+  id: string | number;
+  name: string;
+  image: string;
+  price: string;
+  status?: string;
+}
 
 const categories = ['New', 'Hoodies', 'Tees', 'Jackets', 'Pants', 'Skate']
 
 export default function CollectionPage() {
+
+    const [products, setProducts] = useState<Product[]>([])
+
+    useEffect(() => {
+        async function fetchProducts() {
+            const response = await fetch('/api/products')
+            const data = await response.json()
+            setProducts(data as Product[])
+        }
+        fetchProducts()
+    }, [])
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       <video
