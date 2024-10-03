@@ -66,10 +66,11 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
   }
 
   return (
-    <div>
-      <h2 className="text-xl font-bold mb-4">Product List</h2>
+    <div className=''>
+      <h2 className="text-4xl font-bold mb-4 flex justify-center mt-10 ">Product List</h2>
+      <div className="flex">
       {products.map((product) => (
-        <div key={product._id} className="mb-4 p-4 border rounded">
+        <div key={product._id} className="mb-4 p-4  ">
           {editingProduct && editingProduct._id === product._id ? (
             <EditProductForm product={editingProduct} onSave={handleSave} onCancel={() => setEditingProduct(null)} />
           ) : (
@@ -95,6 +96,7 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
           )}
         </div>
       ))}
+      </div>
     </div>
   )
 }

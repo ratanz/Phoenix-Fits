@@ -51,7 +51,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
   }
 
   return (
-    <div className="flex flex-col items-center justify-center ">
+    <div className="flex items-center justify-center w-[80%] ml-[15%]">
       <form onSubmit={handleSubmit} className="mb-8">
         <input
         type="text"
@@ -59,14 +59,14 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
         onChange={(e) => setName(e.target.value)}
         placeholder="Product Name"
         required
-        className="mb-2 p-2 w-4/5 bg-zinc-900 text-white "
+        className="mb-2 p-2 w-[80%] bg-zinc-900 text-white "
       />
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         placeholder="Description"
         required
-        className="mb-2 p-2 w-4/5 bg-zinc-900 text-white"
+        className=" p-2 w-[75%] bg-zinc-900 text-white"
       />
       <input
         type="number"
@@ -74,23 +74,23 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
         onChange={(e) => setPrice(e.target.value)}
         placeholder="Price"
         required
-        className="mb-2 p-2 w-4/5 bg-zinc-900 text-white"
+        className="mb-2 p-2 w-[70%] bg-zinc-900 text-white"
       />
       <input
         type="number"
         value={discount}
         onChange={(e) => setDiscount(e.target.value)}
         placeholder="Discount"
-        className="mb-2 p-2 w-4/5 bg-zinc-900 text-white"
+        className="mb-2 p-2 w-6/12 bg-zinc-900 text-white"
       />
-      <div className="flex justify-center items-center">
+      <div className="flex items-start justify-evenly w-[80%] mt-10">
       <input
         type="file"
         onChange={(e) => setImage(e.target.files?.[0] || null)}
         accept="image/*"
-        className="mb-2 p-2 w-fit bg-zinc-900 text-white"
+        className=" p-2 w-6/12 bg-zinc-900 text-white rounded-md"
       />
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+      <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">
         Add Product
       </button>
       </div>
