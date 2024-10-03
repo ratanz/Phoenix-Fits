@@ -72,10 +72,10 @@ export default function CollectionPage() {
               </ul>
             </aside>
             <div className="w-full h-full">
-              <div className="flex gap-8 flex-row justify-between">
+              <div className="flex gap-8 flex-row">
                 {products.map((product) => (
                   <div key={product._id} className="relative group">
-                    <div className="w-full h-full mb-4">
+                    <div className="w-full mb-4 border-2 border-white rounded-lg">
                       <Image
                         src={product.image}
                         alt={product.name}
