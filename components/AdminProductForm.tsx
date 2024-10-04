@@ -83,7 +83,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
         placeholder="Discount"
         className="mb-2 p-2 w-6/12 bg-zinc-900 text-white"
       />
-      <div className="flex items-start justify-evenly w-[80%] mt-10">
+      <div className="flex items-center justify-center gap-4 w-[80%] mt-10">
       <input
         type="file"
         onChange={(e) => setImage(e.target.files?.[0] || null)}

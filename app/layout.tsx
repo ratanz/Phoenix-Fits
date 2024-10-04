@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Providers } from "./providers";
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const spacer = localFont({
   src: "./fonts/Spacer36.otf",
@@ -20,10 +23,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${spacer.variable} antialiased`}
-      >
-        {children}
+        className={`${spacer.variable} antialiased`}>
+        <Providers>
+          {children}
+          <ToastContainer />
+        </Providers>
       </body>
+
     </html>
   );
 }

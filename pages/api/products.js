@@ -1,4 +1,4 @@
-import dbConnect from '../../lib/mongodb'
+import dbConnect from '../../lib/mongodb.js'
 import Product from '../../models/Product'
 import { IncomingForm } from 'formidable'
 import { promises as fs } from 'fs'

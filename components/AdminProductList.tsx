@@ -75,10 +75,10 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
             <EditProductForm product={editingProduct} onSave={handleSave} onCancel={() => setEditingProduct(null)} />
           ) : (
             <>
-              <h3 className="font-bold">{product.name}</h3>
-              <p>{product.description}</p>
-              <p>Price: ${product.price}</p>
-              {product.discount && <p>Discount: ${product.discount}</p>}
+              <h3 className="font-bold text-2xl">{product.name}</h3>
+              <p className='text-gray-400'>{product.description}</p>
+              <p className='text-blue-500'>Price: ₹{product.price}</p>
+              {product.discount && <p className='text-green-300'>Discount: ₹{product.discount}</p>}
               <img src={product.image} alt={product.name} className="w-32 h-32 object-cover mt-2" />
               <button
                 onClick={() => handleEdit(product)}

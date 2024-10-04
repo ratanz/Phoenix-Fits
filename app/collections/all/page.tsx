@@ -3,7 +3,11 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ShoppingCart, Search } from 'lucide-react'
+import { ShoppingCart, Search, User } from 'lucide-react'
+import { useSession, signIn, signOut } from 'next-auth/react'
+import { useCart } from '@/hooks/useCart'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 interface Product {
   _id: string;
@@ -18,7 +22,8 @@ interface Product {
 const categories = ['New', 'Hoodies', 'Tees', 'Jackets', 'Pants', 'Skate']
 
 export default function CollectionPage() {
-
+  const { data: session } = useSession()
+  const { cart, addToCart } = useCart();
   const [products, setProducts] = useState<Product[]>([])
 
   useEffect(() => {
@@ -30,8 +35,13 @@ export default function CollectionPage() {
     fetchProducts()
   }, [])
 
+  const handleAddToCart = (product: Product) => {
+    addToCart(product);
+  };
+
   return (
     <div className="min-h-screen relative overflow-hidden">
+      <ToastContainer />
       <video
         autoPlay
         loop
@@ -41,6 +51,7 @@ export default function CollectionPage() {
         <source src="/video/starseffect.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
+
       <div className="relative p-10 z-10 min-h-screen bg-black bg-opacity-50 text-white">
         <header className="p-4 pl-10 flex justify-between items-center">
           <nav>
@@ -52,10 +63,22 @@ export default function CollectionPage() {
           </div>
           <div className="flex items-center justify-center w-fit ">
             <Search className="w-6 h-6 mr-4 cursor-pointer" />
-            <div className="flex items-center cursor-pointer">
+            <Link href="/cart" className="flex items-center cursor-pointer mr-4">
               <ShoppingCart className="w-6 h-6 mr-2" />
-              <span>Cart (0)</span>
-            </div>
+              <span>Cart ({cart.length})</span>
+            </Link>
+            {session ? (
+              <div className="flex items-center">
+                <span className="mr-2">{session.user?.name}</span>
+                <button onClick={() => signOut()} className="bg-red-500 text-white px-2 py-1 rounded">
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <Link href="/auth/signin">
+                <User className="w-6 h-6 cursor-pointer" />
+              </Link>
+            )}
           </div>
         </header>
 
@@ -75,25 +98,33 @@ export default function CollectionPage() {
               <div className="flex gap-8 flex-row">
                 {products.map((product) => (
                   <div key={product._id} className="relative group">
-                    <div className="w-full mb-4 border-2 border-white rounded-lg">
+                    <div className="w-full mb-4 border-2 border-white rounded-lg overflow-hidden">
                       <Image
                         src={product.image}
                         alt={product.name}
-                        width={200}
-                        height={100}
+                        width={300}
+                        height={200}
                         objectFit="cover"
-                        className="rounded-lg"
+                        className="rounded-lg transition-transform duration-300 group-hover:scale-110"
                       />
+                      <div className="absolute flex items-center justify-center w-full top-52 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <button
+                          onClick={() => handleAddToCart(product)}
+                          className="bg-white text-black py-2 px-4 mb-4 rounded-md transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"
+                        >
+                          Add to Cart
+                        </button>
+                      </div>
                     </div>
                     <h3 className="text-sm font-medium">{product.name}</h3>
+                    <p className="text-xs text-gray-400 mt-1 mb-2">{product.description}</p>
                     <p className="text-sm text-gray-400">
-                      ${product.discount ? (
+                      ₹{product.price.toFixed(2)}
+                      {product.discount && (
                         <>
-                          <span className="line-through">{product.price.toFixed(2)}</span>{' '}
-                          ${(product.price - product.discount).toFixed(2)}
+                          {' '}
+                          <span className="line-through">₹{(product.price - product.discount).toFixed(2)}</span>
                         </>
-                      ) : (
-                        product.price.toFixed(2)
                       )}
                     </p>
                     {product.status && (
