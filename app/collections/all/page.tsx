@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingCart, Search, User } from 'lucide-react'
-import { useSession, signIn, signOut } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { useCart } from '@/hooks/useCart'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -75,7 +75,7 @@ export default function CollectionPage() {
                 </button>
               </div>
             ) : (
-              <Link href="/auth/signin">
+              <Link href="/auth/signup">
                 <User className="w-6 h-6 cursor-pointer" />
               </Link>
             )}

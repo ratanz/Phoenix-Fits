@@ -59,14 +59,14 @@ export default function SignUp() {
             className="w-full p-2 mb-4 bg-gray-700 rounded"
           />
           <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded mb-4">
-            Sign Up
+            Sign in
           </button>
         </form>
         <button
           onClick={() => signIn('google', { callbackUrl: '/collections/all' })}
           className="w-full bg-red-500 text-white p-2 rounded mb-4"
         >
-          Sign Up with Google
+          Sign in with Google
         </button>
         <p className="text-center">
           Already have an account? <Link href="/auth/login" className="text-blue-400">Log In</Link>
