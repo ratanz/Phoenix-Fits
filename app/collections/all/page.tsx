@@ -8,19 +8,9 @@ import { useSession, signOut } from 'next-auth/react'
 import { useCart } from '@/hooks/useCart'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-
-interface Product {
-  _id: string;
-  name: string;
-  description: string;
-  image: string;
-  price: number;
-  discount?: number;
-  status?: string;
-}
+import { Product } from '@/app/types';
 
 const categories = ['New', 'Hoodies', 'Tees', 'Jackets', 'Pants', 'Skate']
-
 export default function CollectionPage() {
   const { data: session } = useSession()
   const { cart, addToCart } = useCart();

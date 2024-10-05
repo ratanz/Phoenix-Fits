@@ -6,4 +6,5 @@ export interface Product {
     price: number;
     discount?: number;
     status?: string;
+    quantity: number;
   }
