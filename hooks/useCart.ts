@@ -43,11 +43,17 @@ export function useCart() {
         setCart((prevCart) => [...prevCart, product]);
         toast.success('Item added to cart');
       } else {
-        throw new Error('Failed to add item to cart');
+        const errorData = await response.json();
+        console.error('Failed to add item to cart:', errorData);
+        toast.error(`Failed to add item to cart: ${errorData.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error adding to cart:', error);
-      toast.error('Failed to add item to cart');
+      if (error instanceof Error) {
+        toast.error(`Failed to add item to cart: ${error.message}`);
+      } else {
+        toast.error('Failed to add item to cart: Unknown error');
+      }
     }
   };
 

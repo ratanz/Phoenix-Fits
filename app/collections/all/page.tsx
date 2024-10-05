@@ -26,6 +26,8 @@ export default function CollectionPage() {
   const { cart, addToCart } = useCart();
   const [products, setProducts] = useState<Product[]>([])
 
+  console.log('Current session:', session);
+
   useEffect(() => {
     async function fetchProducts() {
       const response = await fetch('/api/products')
@@ -36,9 +38,12 @@ export default function CollectionPage() {
   }, [])
 
   const handleAddToCart = (product: Product) => {
-    addToCart(product);
+    if (session) {
+      addToCart(product);
+    } else {
+      toast.error('Please sign in to add items to your cart');
+    }
   };
-
   return (
     <div className="min-h-screen relative overflow-hidden">
       <ToastContainer />

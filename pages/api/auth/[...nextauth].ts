@@ -1,11 +1,20 @@
-import NextAuth from 'next-auth'
+import NextAuth, { DefaultSession } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { MongoDBAdapter } from '@auth/mongodb-adapter'
 import clientPromise from '@/lib/mongodb-adapter'
 import bcrypt from 'bcryptjs'
 
-export default NextAuth({
+// Extend the built-in session type
+declare module "next-auth" {
+  interface Session extends DefaultSession {
+    user: {
+      id: string;
+    } & DefaultSession["user"]
+  }
+}
+
+export const authOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -31,7 +40,7 @@ export default NextAuth({
   ],
   adapter: MongoDBAdapter(clientPromise),
   callbacks: {
-    async session({ session, user }) {
+    async session({ session, user }: { session: any; user: any }) {
       if (session.user) {
         session.user.id = user.id
       }
@@ -41,4 +50,6 @@ export default NextAuth({
   pages: {
     signIn: '/auth/login',
   },
-})
+};
+
+export default NextAuth(authOptions);
