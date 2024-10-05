@@ -44,15 +44,24 @@ export default function Landing() {
       </div>
       
       {/* Character image */}
-      <div className="absolute right-[25%]  top-1/2 transform -translate-y-1/2">
+      <div className="absolute right-[25%] top-1/2 transform -translate-y-1/2">
         <Image unoptimized
-          src="/images/logoshop.webp"
+          src="/images/gorbalogo.jpg"
           width={400}
           height={400}
-          alt="Cartoon character"
-          className="w-52 h-52"
+          alt="logo"
+          className="w-52 h-52 animate-pulse"
+          style={{
+            animation: 'scaleUpDown 1.3s infinite ease-in-out'
+          }}
         />
       </div>
+      <style jsx>{`
+        @keyframes scaleUpDown {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+        }
+      `}</style>
       
       <style jsx>{`
         .stars {

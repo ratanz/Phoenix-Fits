@@ -98,7 +98,7 @@ export default function CollectionPage() {
               <div className="flex gap-8 flex-row">
                 {products.map((product) => (
                   <div key={product._id} className="relative group">
-                    <div className="w-full mb-4 border-2 border-white rounded-lg overflow-hidden">
+                    <div className="relative w-full mb-4 border-2 border-white rounded-lg overflow-hidden">
                       <Image
                         src={product.image}
                         alt={product.name}
@@ -107,10 +107,10 @@ export default function CollectionPage() {
                         objectFit="cover"
                         className="rounded-lg transition-transform duration-300 group-hover:scale-110"
                       />
-                      <div className="absolute flex items-center justify-center w-full top-52 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="absolute flex items-center justify-center w-full bottom-0 h-16 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <button
                           onClick={() => handleAddToCart(product)}
-                          className="bg-white text-black py-2 px-4 mb-4 rounded-md transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"
+                          className="bg-white text-black py-2 px-4 rounded-md transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"
                         >
                           Add to Cart
                         </button>
