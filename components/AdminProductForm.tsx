@@ -1,5 +1,6 @@
 'use client'
 
+import { useCustomToast } from '@/hooks/useCustomToast'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 
@@ -13,6 +14,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
   const [price, setPrice] = useState('')
   const [discount, setDiscount] = useState('')
   const [image, setImage] = useState<File | null>(null)
+  const {showToast} = useCustomToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -42,11 +44,11 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
       } else {
         const errorData = await response.json()
         console.error('Failed to add product:', errorData)
-        toast.error(`Failed to add product: ${errorData.error}`)
+        showToast(`Failed to add product: ${errorData.error}`)
       }
     } catch (error) {
       console.error('Error adding product:', error)
-      toast.error('An error occurred while adding the product')
+      showToast('An error occurred while adding the product', 'error')
     }
   }
 
@@ -59,14 +61,14 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
         onChange={(e) => setName(e.target.value)}
         placeholder="Product Name"
         required
-        className="mb-2 p-2 w-[80%] bg-zinc-900 text-white "
+        className="mb-2 p-2 w-[80%] bg-zinc-900 text-white rounded-md"
       />
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         placeholder="Description"
         required
-        className=" p-2 w-[75%] bg-zinc-900 text-white"
+        className=" p-2 w-[75%] bg-zinc-900 text-white rounded-md"
       />
       <input
         type="number"
@@ -74,14 +76,14 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
         onChange={(e) => setPrice(e.target.value)}
         placeholder="Price"
         required
-        className="mb-2 p-2 w-[70%] bg-zinc-900 text-white"
+        className="mb-2 p-2 w-[70%] bg-zinc-900 text-white rounded-md"
       />
       <input
         type="number"
         value={discount}
         onChange={(e) => setDiscount(e.target.value)}
         placeholder="Discount"
-        className="mb-2 p-2 w-6/12 bg-zinc-900 text-white"
+        className="mb-2 p-2 w-6/12 bg-zinc-900 text-white rounded-md backdrop-blur-xl bg-transparent"
       />
       <div className="flex items-center justify-center gap-4 w-[80%] mt-10">
       <input

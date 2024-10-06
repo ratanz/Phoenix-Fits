@@ -78,32 +78,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       break;
 
-    case 'PUT':
-      try {
-        console.log('Request body:', req.body);
-        const { productId, quantity } = req.body;
-        const cart = await Cart.findOne({ userId });
-        if (!cart) {
-          return res.status(404).json({ error: 'Cart not found' });
-        }
-        const itemIndex = cart.items.findIndex((item: CartItem) => item.product && item.product.toString() === productId);
-        if (itemIndex > -1) {
-          if (quantity > 0) {
-            cart.items[itemIndex].quantity = quantity;
-          } else {
-            cart.items.splice(itemIndex, 1);
+      case 'PUT':
+        try {
+          console.log('Request body:', req.body);
+          const { productId, quantity } = req.body;
+          const cart = await Cart.findOne({ userId });
+          if (!cart) {
+            return res.status(404).json({ error: 'Cart not found' });
           }
-          await cart.save();
-          console.log('Updated cart:', cart);
-          res.status(200).json({ message: 'Cart updated', cart });
-        } else {
-          res.status(404).json({ error: 'Item not found in cart' });
+          const itemIndex = cart.items.findIndex((item: CartItem) => item.product && item.product.toString() === productId);
+          if (itemIndex > -1) {
+            if (quantity > 0) {
+              cart.items[itemIndex].quantity = quantity;
+            } else {
+              cart.items.splice(itemIndex, 1);
+            }
+            await cart.save();
+            console.log('Updated cart:', cart);
+            res.status(200).json({ success: true, message: 'Cart updated', cart });
+          } else {
+            res.status(404).json({ success: false, error: 'Item not found in cart' });
+          }
+        } catch (error) {
+          console.error('Error updating cart:', error);
+          res.status(500).json({ success: false, error: 'Failed to update cart', details: (error as Error).message });
         }
-      } catch (error) {
-        console.error('Error updating cart:', error);
-        res.status(500).json({ error: 'Failed to update cart' });
-      }
-      break;
+        break;
 
     case 'DELETE':
       try {

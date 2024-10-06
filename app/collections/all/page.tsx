@@ -6,15 +6,16 @@ import Link from 'next/link'
 import { ShoppingCart, Search, User } from 'lucide-react'
 import { useSession, signOut } from 'next-auth/react'
 import { useCart } from '@/hooks/useCart'
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import { Product } from '@/app/types';
+import { useCustomToast } from '@/hooks/useCustomToast'
+import ToastManager from '@/components/ToastManger'
 
 const categories = ['New', 'Hoodies', 'Tees', 'Jackets', 'Pants', 'Skate']
 export default function CollectionPage() {
   const { data: session } = useSession()
   const { cart, addToCart } = useCart();
   const [products, setProducts] = useState<Product[]>([])
+  const { showToast } = useCustomToast();
 
   console.log('Current session:', session);
 
@@ -31,12 +32,12 @@ export default function CollectionPage() {
     if (session) {
       addToCart(product);
     } else {
-      toast.error('Please sign in to add items to your cart');
+      showToast('Please sign in to add items to your cart');
     }
   };
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <ToastContainer />
+      <ToastManager />
       <video
         autoPlay
         loop

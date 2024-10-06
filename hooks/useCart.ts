@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { Product } from '@/app/types';
 import { toast } from 'react-toastify';
+import { useCustomToast } from './useCustomToast';
 
 interface CartItem extends Product {
   quantity: number;
@@ -10,6 +11,7 @@ interface CartItem extends Product {
 export function useCart() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const { data: session } = useSession();
+  const { showToast } = useCustomToast();
 
   useEffect(() => {
     if (session) {
@@ -31,14 +33,14 @@ export function useCart() {
       }
     } catch (error) {
       console.error('Error fetching cart:', error);
-      toast.error('Failed to fetch cart items');
+      showToast('Failed to fetch cart items');
     }
   };
 
   const addToCart = async (product: Product) => {
     console.log('Adding product to cart:', product);
     if (!session) {
-      toast.error('Please sign in to add items to your cart');
+      showToast('Please sign in to add items to your cart');
       return;
     }
     try {
@@ -49,15 +51,15 @@ export function useCart() {
       });
       if (response.ok) {
         await fetchCart();
-        toast.success('Item added to cart');
+        showToast('Item added to cart');
       } else {
         const errorData = await response.json();
         console.error('Failed to add item to cart:', errorData);
-        toast.error(`Failed to add item to cart: ${errorData.error || 'Unknown error'}`);
+        showToast(`Failed to add item to cart: ${errorData.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error adding to cart:', error);
-      toast.error('Failed to add item to cart: Unknown error');
+      showToast('Failed to add item to cart: Unknown error');
     }
   };
 
@@ -70,13 +72,13 @@ export function useCart() {
       });
       if (response.ok) {
         await fetchCart();
-        toast.success('Cart updated');
+        showToast('Cart updated');
       } else {
         throw new Error('Failed to update cart');
       }
     } catch (error) {
       console.error('Error updating cart:', error);
-      toast.error('Failed to update cart');
+      showToast('Failed to update cart');
     }
   };
 
@@ -89,13 +91,13 @@ export function useCart() {
       });
       if (response.ok) {
         await fetchCart();
-        toast.success('Item removed from cart');
+        showToast('Item removed from cart');
       } else {
         throw new Error('Failed to remove item from cart');
       }
     } catch (error) {
       console.error('Error removing from cart:', error);
-      toast.error('Failed to remove item from cart');
+      showToast('Failed to remove item from cart');
     }
   };
 

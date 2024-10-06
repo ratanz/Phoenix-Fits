@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./providers";
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import dynamic from 'next/dynamic';
+
+const ToastManager = dynamic(() => import('@/components/ToastManger'), { ssr: false });
 
 const spacer = localFont({
   src: "./fonts/Spacer36.otf",
@@ -22,14 +23,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${spacer.variable} antialiased`}>
+      <body className={`${spacer.variable} antialiased`}>
         <Providers>
           {children}
-          <ToastContainer />
         </Providers>
       </body>
-
     </html>
   );
 }

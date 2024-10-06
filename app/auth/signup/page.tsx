@@ -2,15 +2,16 @@
 
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useCustomToast } from '@/hooks/useCustomToast'
 
 export default function SignUp() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
+  const { showToast } = useCustomToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -21,14 +22,14 @@ export default function SignUp() {
         body: JSON.stringify({ name, email, password }),
       })
       if (res.ok) {
-        toast.success('Sign up successful! Redirecting to login...')
+        showToast('Sign up successful! Redirecting to login...')
         router.push('/auth/login')
       } else {
         const error = await res.text()
-        toast.error(error)
+        showToast(error)
       }
     } catch (error) {
-      toast.error('An error occurred during sign up')
+      showToast('An error occurred during sign up')
     }
   }
 

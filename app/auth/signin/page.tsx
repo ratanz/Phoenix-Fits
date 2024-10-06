@@ -2,16 +2,16 @@
 
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-
+import { useCustomToast } from '@/hooks/useCustomToast'
 export default function SignIn() {
   const [isSignUp, setIsSignUp] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
+  const { showToast } = useCustomToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -23,15 +23,15 @@ export default function SignIn() {
           body: JSON.stringify({ name, email, password }),
         })
         if (res.ok) {
-          toast.success('Sign up successful! Redirecting...')
+          showToast('Sign up successful! Redirecting...')
           await signIn('credentials', { email, password, redirect: false })
           router.push('/collections/all')
         } else {
           const error = await res.text()
-          toast.error(error)
+          showToast(error)
         }
       } catch (error) {
-        toast.error('An error occurred during sign up')
+        showToast('An error occurred during sign up')
       }
     } else {
       try {
@@ -41,13 +41,13 @@ export default function SignIn() {
           password,
         })
         if (result?.error) {
-          toast.error(result.error)
+          showToast(result.error)
         } else {
-          toast.success('Logged in successfully')
+          showToast('Logged in successfully')
           router.push('/collections/all')
         }
       } catch (error) {
-        toast.error('An error occurred during login')
+        showToast('An error occurred during login')
       }
     }
   }
