@@ -70,28 +70,28 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
 
   return (
     <div className='flex flex-col justify-center items-start w-full lg:p-24 p-4'>
-      <h2 className="text-4xl font-bold mb-4 flex justify-center mt-10">Product List</h2>
+      <h2 className="text-4xl font-bold mb-4 flex justify-center self-center mt-10">Product List</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map((product) => (
-          <div key={product._id} className="mb-4 p-6 border border-zinc-600 rounded backdrop-blur-sm relative">
+          <div key={product._id} className="lg:mb-2 p-6 border border-zinc-600 rounded-xl bg-transparent backdrop-blur-sm z-10 shadow-lg shadow-zinc-500/50 relative hover:translate-y-[-7px] transition-all duration-300 ease-in-out mt-10">
             <div className={`flex flex-col md:flex-row gap-4 ${editingProduct && editingProduct._id === product._id ? 'lg:hidden' : ''}`}>
-              <div className="flex-1">
+              <div className="flex justify-center items-center flex-col">
                 <h3 className="font-bold text-2xl">{product.name}</h3>
-                <p className='text-gray-400'>{product.description}</p>
-                <p className='text-blue-500'>Price: ₹{product.price}</p>
-                {product.discount && <p className='text-green-300'>Discount: ₹{product.discount}</p>}
-                <img src={product.image} alt={product.name} className="w-fit h-fit object-cover mt-2" />
+                <p className='text-gray-300 mb-3'>{product.description}</p>
+                <p className='text-zinc -100'>Price: ₹{product.price}</p>
+                {product.discount && <p className='text-green-400'>Discount: ₹{product.discount}</p>}
+                <img src={product.image} alt={product.name} className="w-fit h-fit object-cover mt-2 rounded-xl" />
                 <div className="mt-2">
                   <button
                     onClick={() => handleEdit(product)}
-                    className="bg-blue-500 text-white p-2 rounded mr-2"
+                    className="bg-transparent border border-zinc-600/50 text-white p-2 px-4 rounded-xl mr-2"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(product._id)}
-                    className="bg-red-500 text-white p-2 rounded"
+                    className="bg-red-600 bg-opacity-90 border border-zinc-600/50 text-white p-2 px-4 rounded-xl"
                   >
                     Delete
                   </button>
@@ -99,7 +99,7 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
               </div>
             </div>
             {editingProduct && editingProduct._id === product._id && (
-              <div className="flex-1 lg:absolute lg:inset-20  lg:bg-white lg:dark:bg-transparent lg:z-10">
+              <div className="flex-1 lg:absolute lg:inset-10 lg:bg-white lg:dark:bg-transparent lg:z-10">
                 <EditProductForm 
                   product={editingProduct} 
                   onSave={handleSave} 

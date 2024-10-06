@@ -32,7 +32,7 @@ export default function AdminPage() {
           Your browser does not support the video tag.
         </video>
 
-        <div className="container relative z-10 mx-auto p-4">
+        <div className="container relative z-10 mx-auto lg:p-14 p-4 lg:mt-0 mt-6">
           <h1 className="text-2xl font-bold mb-4 flex justify-center">Admin Dashboard</h1>
           <AdminProductForm onProductAdded={fetchProducts} />
           <AdminProductList products={products} onProductUpdated={fetchProducts} onProductDeleted={fetchProducts} />
