@@ -61,14 +61,14 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           onChange={(e) => setName(e.target.value)}
           placeholder="Product Name"
           required
-          className="mb-2 p-2 w-full lg:w-[80%] backdrop-blur-2xl bg-transparent border border-zinc-600 text-white rounded-md"
+          className="mb-2 p-2 w-full lg:w-[80%] backdrop-blur-2xl bg-transparent border border-zinc-600 text-white rounded-md hover:scale-105 transition-all duration-300"
         />
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description"
           required
-          className="p-2 h-16 w-full lg:w-[80%] backdrop-blur-sm bg-transparent border border-zinc-600 text-white rounded-md"
+          className="p-2 h-16 w-full lg:w-[80%] backdrop-blur-sm bg-transparent border border-zinc-600 text-white rounded-md hover:scale-105 transition-all duration-300"
         />
         <input
           type="number"
@@ -76,23 +76,23 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           onChange={(e) => setPrice(e.target.value)}
           placeholder="Price"
           required
-          className="mb-2 p-2 w-full lg:w-[80%] backdrop-blur-sm bg-transparent border border-zinc-600 text-zinc-100 rounded-md"
+          className="mb-2 p-2 w-full lg:w-[80%] backdrop-blur-sm bg-transparent border border-zinc-600 text-zinc-100 rounded-md hover:scale-105 transition-all duration-300"
         />
         <input
           type="number"
           value={discount}
           onChange={(e) => setDiscount(e.target.value)}
           placeholder="Discount"
-          className="mb-2 p-2 w-full lg:w-6/12 backdrop-blur-sm bg-transparent border border-zinc-600 text-zinc-100 rounded-md"
+          className="mb-2 p-2 w-full lg:w-6/12 backdrop-blur-sm bg-transparent border border-zinc-600 text-zinc-100 rounded-md hover:scale-105 transition-all duration-300"
         />
         <div className="px-0 lg:px-0 flex flex-col lg:flex-row items-center justify-center gap-6 w-full lg:w-[80%] mt-10">
           <input
             type="file"
             onChange={(e) => setImage(e.target.files?.[0] || null)}
             accept="image/*"
-            className="p-2 w-[80%] lg:w-6/12 backdrop-blur-sm bg-transparent border border-zinc-600/50 text-white rounded-md"
+            className="p-2 w-[80%] lg:w-6/12 backdrop-blur-sm bg-transparent border border-zinc-600/50 text-white rounded-md hover:scale-105 transition-all duration-300"
           />
-          <button type="submit" className="w-[70%] lg:w-auto bg-gray-100 bg-opacity-90 border bg-transparent text-black p-2 rounded-md mt-4 lg:mt-0">
+          <button type="submit" className="w-[70%] lg:w-auto bg-gray-100 bg-opacity-90 border text-black p-2 rounded-md mt-4 lg:mt-0">
             Add Product
           </button>
         </div>

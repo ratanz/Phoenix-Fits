@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ShoppingCart, Search, User } from 'lucide-react'
+import { ShoppingCart, Search, User, LogOut } from 'lucide-react'
 import { useSession, signOut } from 'next-auth/react'
 import { useCart } from '@/hooks/useCart'
 import { Product } from '@/app/types';
@@ -48,26 +48,26 @@ export default function CollectionPage() {
         Your browser does not support the video tag.
       </video>
 
-      <div className="relative p-10 z-10 min-h-screen bg-black bg-opacity-50 text-white">
-        <header className="p-4 pl-10 flex justify-between items-center">
+      <div className="relative p-4 z-10 min-h-screen bg-black bg-opacity-50 text-white">
+        <header className="p-2 pl-10 flex justify-between items-center">
           <nav>
             <Link href="/shop" className="mr-4 hover:text-gray-300">Shop</Link>
             <Link href="/contact" className="hover:text-gray-300">Contact</Link>
           </nav>
           <div className="flex-1 flex justify-center">
-            <Image src="/images/textlogo.png" alt="Logo" width={100} height={50} className="mx-auto text-white" />
+            <Image src="/images/textlogo.png" alt="Logo" width={100} height={10} className="mx-auto h-fit w-40 text-white" />
           </div>
-          <div className="flex items-center justify-center w-fit ">
+          <div className="flex items-center justify-end w-fit ">
             <Search className="w-6 h-6 mr-4 cursor-pointer" />
             <Link href="/cart" className="flex items-center cursor-pointer mr-4">
               <ShoppingCart className="w-6 h-6 mr-2" />
-              <span>Cart ({cart.length})</span>
+              <span> ({cart.length})</span>
             </Link>
             {session ? (
               <div className="flex items-center">
                 <span className="mr-2">{session.user?.name}</span>
-                <button onClick={() => signOut()} className="bg-red-500 text-white px-2 py-1 rounded">
-                  Sign Out
+                <button onClick={() => signOut()} className=" text-white px-2 py-1 rounded">
+                  <LogOut className="w-4 h-4 mr-1" />
                 </button>
               </div>
             ) : (
@@ -78,9 +78,9 @@ export default function CollectionPage() {
           </div>
         </header>
 
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-2 py-4">
           <div className="flex">
-            <aside className="w-1/5 p-10  pr-4">
+            <aside className="w-1/5 px-12 pr-4">
               <h2 className="text-xl font-bold mb-4">Categories</h2>
               <ul>
                 {categories.map((category, index) => (
@@ -90,16 +90,15 @@ export default function CollectionPage() {
                 ))}
               </ul>
             </aside>
-            <div className="w-full h-full">
-              <div className="flex gap-8 flex-row">
+            <div className="w-4/5 px-6">
+              <div className="grid grid-cols-4 gap-10">
                 {products.map((product) => (
                   <div key={product._id} className="relative group">
-                    <div className="relative w-full mb-4 border-2 border-white rounded-lg overflow-hidden">
+                    <div className="relative w-full h-64 mb-4 border-2 border-white shadow-white shadow-md rounded-lg overflow-hidden">
                       <Image
                         src={product.image}
                         alt={product.name}
-                        width={300}
-                        height={200}
+                        layout="fill"
                         objectFit="cover"
                         className="rounded-lg transition-transform duration-300 group-hover:scale-110"
                       />
@@ -112,7 +111,7 @@ export default function CollectionPage() {
                         </button>
                       </div>
                     </div>
-                    <h3 className="text-sm font-medium">{product.name}</h3>
+                    <h3 className="text-2xl font-medium">{product.name}</h3>
                     <p className="text-xs text-gray-400 mt-1 mb-2">{product.description}</p>
                     <p className="text-sm text-gray-400">
                       ₹{product.price.toFixed(2)}
