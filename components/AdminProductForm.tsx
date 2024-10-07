@@ -4,6 +4,8 @@ import { useCustomToast } from '@/hooks/useCustomToast'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 
+const categories = ['Tshirt', 'Hoodies', 'Jackets', 'Pants', 'Jorts', 'Socks']
+
 interface AdminProductFormProps {
   onProductAdded: () => void
 }
@@ -14,6 +16,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
   const [price, setPrice] = useState('')
   const [discount, setDiscount] = useState('')
   const [image, setImage] = useState<File | null>(null)
+  const [category, setCategory] = useState('')
   const {showToast} = useCustomToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,6 +26,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
     formData.append('description', description)
     formData.append('price', price)
     formData.append('discount', discount)
+    formData.append('category', category)
     if (image) formData.append('image', image)
 
     try {
@@ -41,6 +45,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
         setPrice('')
         setDiscount('')
         setImage(null)
+        setCategory('')
       } else {
         const errorData = await response.json()
         console.error('Failed to add product:', errorData)
@@ -85,6 +90,17 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           placeholder="Discount"
           className="mb-2 p-2 w-full lg:w-6/12 backdrop-blur-sm bg-transparent border border-zinc-600 text-zinc-100 rounded-md hover:scale-105 transition-all duration-300"
         />
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          required
+          className="flex mb-2 p-2 w-full lg:w-6/12 backdrop-blur-sm bg-transparent border border-zinc-600 bg-black text-zinc-100 rounded-md  transition-all duration-300"
+        >
+          <option className='bg-zinc-900  text-zinc-100  backdrop-blur-md' value="">Select Category</option>
+          {categories.map((cat) => (
+            <option className='bg-zinc-900  text-zinc-100  backdrop-blur-md' key={cat} value={cat}>{cat}</option>
+          ))}
+        </select>
         <div className="px-0 lg:px-0 flex flex-col lg:flex-row items-center justify-center gap-6 w-full lg:w-[80%] mt-10">
           <input
             type="file"

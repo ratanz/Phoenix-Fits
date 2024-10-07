@@ -14,6 +14,7 @@ const config: Config = {
       },
       fontFamily: {
         spacer: "var(--font-spacer)",
+        judas: "var(--font-judas)",
       },
     },
   },

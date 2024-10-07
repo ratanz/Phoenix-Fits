@@ -33,6 +33,7 @@ export default async function handler(req, res) {
         const description = Array.isArray(fields.description) ? fields.description[0] : fields.description
         const price = Array.isArray(fields.price) ? fields.price[0] : fields.price
         const discount = Array.isArray(fields.discount) ? fields.discount[0] : fields.discount
+        const category = Array.isArray(fields.category) ? fields.category[0] : fields.category;
 
         let imagePath = ''
 
@@ -54,6 +55,7 @@ export default async function handler(req, res) {
           price: parseFloat(price),
           discount: discount ? parseFloat(discount) : undefined,
           image: imagePath,
+          category, 
         })
 
         await product.save()
