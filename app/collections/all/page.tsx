@@ -89,7 +89,7 @@ export default function CollectionPage() {
         Your browser does not support the video tag.
       </video>
 
-      <div className="relative p-4 z-10 min-h-screen bg-black bg-opacity-50 text-white font-spacer ">
+      <div className="relative p-10 z-10 min-h-screen bg-black bg-opacity-50 text-white font-spacer ">
         <header className="p-4  pl-10 flex justify-between items-center ">
           <nav className='flex justify-center items-center '>
             <Link href="/shop" className="mr-4 hover:text-gray-300">Shop</Link>
@@ -124,7 +124,7 @@ export default function CollectionPage() {
 
         <main className="container mx-auto px-2 py-4">
           <div className="flex">
-            <aside className="w-1/5 px-12 pr-4">
+            <aside className="w-1/5 px-8 pr-2">
               <h2 className="text-xl font-bold mb-4">Categories</h2>
               <ul>
                 {categories.map((category, index) => (
@@ -147,11 +147,11 @@ export default function CollectionPage() {
                 </li>
               </ul>
             </aside>
-            <div className="w-4/5 px-6">
+            <div className="w-4/5 px-4">
               <div className="grid grid-cols-3 gap-10">
                 {filteredProducts.map((product) => (
                   <div key={product._id} className="relative group">
-                    <div className="relative w-full h-80 mb-4 border-2 border-white shadow-white shadow-md rounded-lg overflow-hidden">
+                    <div className="relative w-full h-80 mb-4 overflow-hidden rounded-lg">
                       <Image
                         src={product.image}
                         alt={product.name}
@@ -159,18 +159,19 @@ export default function CollectionPage() {
                         objectFit="cover"
                         className="rounded-lg transition-transform duration-300 group-hover:scale-110"
                       />
-                      <div className="absolute flex items-center justify-center w-full bottom-0 h-16 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="absolute flex items-center justify-center w-full bottom-0 h-16 bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <button
                           onClick={() => handleAddToCart(product)}
-                          className="bg-white text-black py-2 px-4 rounded-md transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"
+                          className="bg-white/10 text-white py-2 px-4 rounded-md transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-50"
                         >
                           Add to Cart
                         </button>
                       </div>
                     </div>
-                    <h3 className="text-2xl font-medium">{product.name}</h3>
-                    <p className="text-sm text-gray-400 mt-1 mb-2">{product.description}</p>
-                    <p className="text-sm text-gray-00">
+                    <div className="flex flex-col items-center">
+                      <h3 className="text-2xl font-medium">{product.name}</h3>
+                      <p className="text-sm text-gray-400 mt-1 mb-2">{product.description}</p>
+                      <p className="text-sm text-gray-00">
                       ₹{product.price.toFixed(2)}
                       {product.discount && (
                         <>
@@ -185,6 +186,7 @@ export default function CollectionPage() {
                       </span>
                     )}
                   </div>
+                </div>
                 ))}
               </div>
             </div>
