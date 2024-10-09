@@ -12,6 +12,7 @@ import ToastManager from '@/components/ToastManger'
 import SearchPopup from '@/components/SearchPopup'
 
 const categories = ['Tshirt', 'Hoodies', 'Jackets', 'Pants', 'Jorts', 'Socks']
+
 export default function CollectionPage() {
   const { data: session } = useSession()
   const { cart, addToCart } = useCart();
@@ -89,7 +90,7 @@ export default function CollectionPage() {
         Your browser does not support the video tag.
       </video>
 
-      <div className="relative p-10 z-10 min-h-screen bg-black bg-opacity-50 text-white font-spacer ">
+      <div className="relative p-10 z-10 min-h-screen bg-black bg-opacity-30 text-white font-spacer ">
         <header className="p-4  pl-10 flex justify-between items-center ">
           <nav className='flex justify-center items-center '>
             <Link href="/shop" className="mr-4 hover:text-gray-300">Shop</Link>
@@ -101,7 +102,7 @@ export default function CollectionPage() {
           </div>
           
           <div className="flex items-center justify-end w-fit ">
-            <Search className="w-6 h-6 mr-4 cursor-pointer" onClick={handleSearchOpen} />
+            <Search className="w-6 h-6 mr-4 cursor-pointer hover:text-gray-300" onClick={handleSearchOpen} />
             <Link href="/cart" className="flex items-center cursor-pointer mr-4">
               <ShoppingCart className="w-6 h-6 mr-2" />
               <span> ({cart.length})</span>
@@ -109,7 +110,7 @@ export default function CollectionPage() {
             {session ? (
               <div className="flex items-center">
                 <span className="mr-2">{session.user?.name}</span>
-                <button onClick={() => signOut()} className=" text-white px-2 py-1 rounded">
+                <button onClick={() => signOut()} className=" text-white px-2 py-1 rounded ">
                   <LogOut className="w-4 h-4 mr-1" />
                 </button>
               </div>
@@ -131,7 +132,7 @@ export default function CollectionPage() {
                   <li key={index} className="mb-2">
                     <button
                       onClick={() => setSelectedCategory(category)}
-                      className={`hover:text-gray-300 ${selectedCategory === category ? 'font-bold' : ''}`}
+                      className={` transition-all duration-300 transform hover:translate-x-2 hover:scale-105 ${selectedCategory === category ? 'font-bold text-blue-500' : ''}`}
                     >
                       {category}
                     </button>
@@ -140,7 +141,7 @@ export default function CollectionPage() {
                 <li className="mb-2">
                   <button
                     onClick={() => setSelectedCategory(null)}
-                    className="hover:text-gray-300"
+                    className={`${selectedCategory === null ? 'font-bold text-blue-500' : ''}`}
                   >
                     All Products
                   </button>

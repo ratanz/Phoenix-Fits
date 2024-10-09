@@ -52,7 +52,7 @@ return (
   <div className="flex items-center justify-center">
     <h1 className='text-2xl sm:text-3xl md:text-4xl font-judas'>Contact us</h1>
   </div>
-  <form onSubmit={handleSubmit} className="detail flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 lg:p-10 gap-4 mt-6">
+  <form onSubmit={handleSubmit} className="detail flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 lg:p-10 gap-4 mt-6 font-judas">
     <div className="flex flex-col sm:flex-row gap-4 sm:gap-10 w-full max-w-2xl">
       <div className="flex flex-col w-full sm:w-1/2">
         <h3 className='m-2 text-zinc-200/80'>Name</h3>

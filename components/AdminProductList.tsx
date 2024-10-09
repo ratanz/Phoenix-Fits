@@ -4,16 +4,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import EditProductForm from './EditProductForm'
 import { useCustomToast } from '@/hooks/useCustomToast'
-
-interface Product {
-  _id: string
-  name: string
-  description: string
-  price: number
-  discount?: number
-  image: string
-  quantity: number
-}
+import { Product } from '@/app/types'
 
 interface AdminProductListProps {
   products: Product[]
@@ -36,7 +27,7 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(product),
+        body: JSON.stringify({...product, sizes: product.sizes || []}),
       })
       if (response.ok) {
         toast.success('Product updated successfully')
@@ -101,12 +92,15 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
             {editingProduct && editingProduct._id === product._id && (
               <div className="flex-1 lg:absolute lg:inset-10 lg:bg-white lg:dark:bg-transparent lg:z-10">
                 <EditProductForm 
-                  product={editingProduct} 
+                  product={{...editingProduct, sizes: editingProduct.sizes || []}} 
                   onSave={handleSave} 
                   onCancel={() => setEditingProduct(null)} 
                 />
               </div>
             )}
+            <p className='text-zinc-100'>
+              Sizes: {product.sizes && product.sizes.length > 0 ? product.sizes.join(', ') : 'No sizes available'}
+            </p>
           </div>
         ))}
       </div>

@@ -7,4 +7,5 @@ export interface Product {
     image: string;
     status?: string;
     category: string; 
+    sizes: string[];
 }

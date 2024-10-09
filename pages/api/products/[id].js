@@ -12,16 +12,22 @@ export default async function handler(req, res) {
   switch (method) {
     case 'PUT':
       try {
-        const product = await Product.findByIdAndUpdate(id, req.body, {
+        const updateData = { ...req.body };
+        if (typeof updateData.sizes === 'string') {
+          updateData.sizes = JSON.parse(updateData.sizes);
+        }
+        const product = await Product.findByIdAndUpdate(id, updateData, {
           new: true,
           runValidators: true,
-        })
+        });
+        console.log('Updated product:', product); // For debugging
         if (!product) {
-          return res.status(400).json({ success: false })
+          return res.status(400).json({ success: false });
         }
-        res.status(200).json({ success: true, data: product })
+        res.status(200).json({ success: true, data: product });
       } catch (error) {
-        res.status(400).json({ success: false })
+        console.error('Error updating product:', error);
+        res.status(400).json({ success: false, error: error.message });
       }
       break
     case 'DELETE':

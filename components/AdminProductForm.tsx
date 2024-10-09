@@ -3,8 +3,10 @@
 import { useCustomToast } from '@/hooks/useCustomToast'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
+import { Checkbox } from '@/components/Checkbox'; 
 
 const categories = ['Tshirt', 'Hoodies', 'Jackets', 'Pants', 'Jorts', 'Socks']
+const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
 
 interface AdminProductFormProps {
   onProductAdded: () => void
@@ -17,7 +19,15 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
   const [discount, setDiscount] = useState('')
   const [image, setImage] = useState<File | null>(null)
   const [category, setCategory] = useState('')
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+
   const {showToast} = useCustomToast()
+
+  const handleSizeChange = (size: string) => {
+    setSelectedSizes(prev => 
+      prev.includes(size) ? prev.filter(s => s !== size) : [...prev, size]
+    );
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,6 +38,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
     formData.append('discount', discount)
     formData.append('category', category)
     if (image) formData.append('image', image)
+    formData.append('sizes', JSON.stringify(selectedSizes));
 
     try {
       const response = await fetch('/api/products', {
@@ -111,6 +122,19 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           <button type="submit" className="w-[70%] lg:w-auto bg-gray-100 bg-opacity-90 border text-black p-2 rounded-md mt-4 lg:mt-0">
             Add Product
           </button>
+        </div>
+        <div className="mb-4">
+          <p className="text-white mb-2">Available Sizes:</p>
+          <div className="flex flex-wrap gap-4">
+            {sizes.map((size) => (
+              <Checkbox
+                key={size}
+                label={size}
+                checked={selectedSizes.includes(size)}
+                onChange={() => handleSizeChange(size)}
+              />
+            ))}
+          </div>
         </div>
       </form>
     </div>
