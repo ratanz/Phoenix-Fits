@@ -186,6 +186,11 @@ export default function CollectionPage() {
                         {product.status}
                       </span>
                     )}
+                    {product.stock === 'out of stock' && (
+                      <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
+                        Out of Stock
+                      </span>
+                    )}
                   </div>
                 </div>
                 ))}

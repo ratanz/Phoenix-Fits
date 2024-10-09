@@ -35,7 +35,7 @@ export default async function handler(req, res) {
         const discount = Array.isArray(fields.discount) ? fields.discount[0] : fields.discount;
         const category = Array.isArray(fields.category) ? fields.category[0] : fields.category;
         const sizes = fields.sizes ? JSON.parse(Array.isArray(fields.sizes) ? fields.sizes[0] : fields.sizes) : [];
-
+        const stock = Array.isArray(fields.stock) ? fields.stock[0] : fields.stock;
         let imagePath = '';
 
         if (files.image && files.image.length > 0) {
@@ -57,7 +57,8 @@ export default async function handler(req, res) {
           discount: discount ? parseFloat(discount) : undefined,
           image: imagePath,
           category,
-          sizes
+          sizes,
+          stock
         });
 
         await product.save();

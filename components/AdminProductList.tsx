@@ -72,6 +72,7 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
                 <p className='text-gray-300 mb-3'>{product.description}</p>
                 <p className='text-zinc -100'>Price: ₹{product.price}</p>
                 {product.discount && <p className='text-green-400'>Discount: ₹{product.discount}</p>}
+               
                 <img src={product.image} alt={product.name} className="w-fit h-fit object-cover mt-2 rounded-xl" />
                 <div className="mt-2">
                   <button
@@ -98,9 +99,12 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
                 />
               </div>
             )}
-            <p className='text-zinc-100'>
+            <p className='text-zinc-100/50 text-sm mt-4 flex justify-center items-center'>
               Sizes: {product.sizes && product.sizes.length > 0 ? product.sizes.join(', ') : 'No sizes available'}
             </p>
+            <p className={`text-${product.stock === 'in stock' ? 'green' : 'red'}-400 text-sm mt-2 flex justify-center items-center `}>
+                  Stock: {product.stock}
+                </p>
           </div>
         ))}
       </div>

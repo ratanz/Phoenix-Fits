@@ -4,6 +4,7 @@ import { useCustomToast } from '@/hooks/useCustomToast'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { Checkbox } from '@/components/Checkbox'; 
+import { Product } from '@/app/types';
 
 const categories = ['Tshirt', 'Hoodies', 'Jackets', 'Pants', 'Jorts', 'Socks']
 const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
@@ -20,6 +21,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
   const [image, setImage] = useState<File | null>(null)
   const [category, setCategory] = useState('')
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [stock, setStock] = useState<Product['stock']>('in stock')
 
   const {showToast} = useCustomToast()
 
@@ -39,7 +41,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
     formData.append('category', category)
     if (image) formData.append('image', image)
     formData.append('sizes', JSON.stringify(selectedSizes));
-
+    formData.append('stock', stock);
     try {
       const response = await fetch('/api/products', {
         method: 'POST',
@@ -57,6 +59,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
         setDiscount('')
         setImage(null)
         setCategory('')
+        setStock('in stock')
       } else {
         const errorData = await response.json()
         console.error('Failed to add product:', errorData)
@@ -111,6 +114,15 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           {categories.map((cat) => (
             <option className='bg-zinc-900  text-zinc-100  backdrop-blur-md' key={cat} value={cat}>{cat}</option>
           ))}
+        </select>
+        <select
+          value={stock}
+          onChange={(e) => setStock(e.target.value as Product['stock'])}
+          required
+          className="mb-2 p-2 w-full lg:w-6/12 backdrop-blur-sm bg-transparent border border-zinc-600 bg-black text-zinc-100 rounded-md transition-all duration-300"
+        >
+          <option value="in stock">In Stock</option>
+          <option value="out of stock">Out of Stock</option>
         </select>
         <div className="px-0 lg:px-0 flex flex-col lg:flex-row items-center justify-center gap-6 w-full lg:w-[80%] mt-10">
           <input

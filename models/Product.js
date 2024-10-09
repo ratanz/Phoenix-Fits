@@ -8,6 +8,7 @@ const ProductSchema = new mongoose.Schema({
   image: { type: String, required: true },
   category: { type: String, required: true },
   sizes: { type: [String], default: [] },
+  stock: { type: String, enum: ['in stock', 'out of stock'], default: 'in stock' },
 });
 
 export default mongoose.models.Product || mongoose.model('Product', ProductSchema);

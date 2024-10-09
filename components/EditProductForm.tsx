@@ -62,6 +62,15 @@ export default function EditProductForm({ product, onSave, onCancel }: EditProdu
         onChange={handleChange}
         className="mb-2 p-4 w-full bg-transparent border border-zinc-600/30 text-white rounded-md"
       />
+      <select
+        name="stock"
+        value={editedProduct.stock}
+        onChange={handleChange}
+        className="mb-2 p-2 w-full bg-transparent border border-zinc-600/30 text-white rounded-md"
+      >
+        <option value="in stock">In Stock</option>
+        <option value="out of stock">Out of Stock</option>
+      </select>
       <div className="mb-4">
         <p className="text-white mb-2">Available Sizes:</p>
         <div className="flex flex-wrap gap-4">

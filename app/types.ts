@@ -8,4 +8,5 @@ export interface Product {
     status?: string;
     category: string; 
     sizes: string[];
+    stock: 'in stock' | 'out of stock';
 }
