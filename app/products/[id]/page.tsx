@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import Image from 'next/image'
 import { useParams } from 'next/navigation'
+import { useSwipeable } from 'react-swipeable'
 import { useCart } from '@/hooks/useCart'
 import { useCustomToast } from '@/hooks/useCustomToast'
 import { Product } from '@/app/types'
@@ -60,17 +61,23 @@ export default function ProductPage() {
     showToast('Buy Now functionality not implemented yet')
   }, [showToast])
 
-  const handlePrevImage = () => {
+  const handlePrevImage = useCallback(() => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === 0 ? (product?.subImages?.length || 0) : prevIndex - 1
     )
-  }
+  }, [product?.subImages?.length])
 
-  const handleNextImage = () => {
+  const handleNextImage = useCallback(() => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === (product?.subImages?.length || 0) ? 0 : prevIndex + 1
     )
-  }
+  }, [product?.subImages?.length])
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: handleNextImage,
+    onSwipedRight: handlePrevImage,
+    trackMouse: true
+  })
 
   if (isLoading) {
     return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white'>Loading...</div>
@@ -118,10 +125,10 @@ export default function ProductPage() {
           </div>
         </div>
 
-        <div className="bg-opacity-70 p-14 rounded-lg shadow-lg flex flex-col">
+        <div className="bg-opacity-70 p-14 flex flex-col">
           <div className="flex flex-col justify-evenly md:flex-row">
             <div className="md:w-1/2 flex flex-col justify-center items-center md:mb-0">
-              <div className="relative w-full h-96">
+              <div className="relative w-full h-96" {...swipeHandlers}>
                 <Image
                   src={allImages[currentImageIndex]}
                   alt={product.name}
@@ -133,13 +140,13 @@ export default function ProductPage() {
                   <>
                     <button
                       onClick={handlePrevImage}
-                      className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 p-2 rounded-full"
+                      className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:scale-105 transition-all duration-150 p-2 rounded-full border border-white/20 shadow-sm shadow-white/30"
                     >
                       <ChevronLeft className="text-white" />
                     </button>
                     <button
                       onClick={handleNextImage}
-                      className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 p-2 rounded-full"
+                      className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:scale-105 transition-all duration-150 p-2 rounded-full border border-white/20 shadow-sm shadow-white/30"
                     >
                       <ChevronRight className="text-white" />
                     </button>
@@ -169,15 +176,15 @@ export default function ProductPage() {
               <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
               <p className="text-gray-300 mb-4">{product.description}</p>
               <p className="text-2xl font-bold mb-4">₹{product.price.toFixed(2)}</p>
-              {/* {product.discount && (
+              {/* {product.discount && (b
                 <p className="text-green-500 mb-4">Discount: ₹{product.discount.toFixed(2)}</p>
               )} */}
               <p className="mb-4">Category: {product.category}</p>
               <p className="mb-4">Available Sizes: {product.sizes.join(', ')}</p>
               {/* add select size */}
-              <select className="mb-4 bg-transparent border border-white/50 rounded-md p-2">
+              <select className="mb-4 bg-transparent border border-white/50 text-white rounded-md p-2">
                 {product.sizes.map((size) => (
-                  <option key={size} value={size}>{size}</option>
+                  <option className='bg-black/90' key={size} value={size}>{size}</option>
                 ))}
               </select>
               <p className="mb-4">Stock: {product.stock}</p>
