@@ -10,6 +10,18 @@ export default async function handler(req, res) {
   await dbConnect()
 
   switch (method) {
+    case 'GET':
+      try {
+        const product = await Product.findById(id)
+        if (!product) {
+          return res.status(404).json({ success: false, error: 'Product not found' })
+        }
+        res.status(200).json(product)
+      } catch (error) {
+        res.status(400).json({ success: false, error: 'Error fetching product' })
+      }
+      break
+
     case 'PUT':
       try {
         const updateData = { ...req.body };

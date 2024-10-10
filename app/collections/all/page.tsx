@@ -93,7 +93,7 @@ export default function CollectionPage() {
       <div className="relative p-10 z-10 min-h-screen bg-black bg-opacity-30 text-white font-spacer ">
         <header className="p-4  pl-10 flex justify-between items-center ">
           <nav className='flex justify-center items-center '>
-            <Link href="/shop" className="mr-4 hover:text-gray-300">Shop</Link>
+            {/* <Link href="/shop" className="mr-4 hover:text-gray-300">Shop</Link> */}
             <Link href="/contact" className="hover:text-gray-300">Contact</Link>
           </nav>
           <div className="logo">
@@ -103,10 +103,18 @@ export default function CollectionPage() {
           
           <div className="flex items-center justify-end w-fit ">
             <Search className="w-6 h-6 mr-4 cursor-pointer hover:text-gray-300" onClick={handleSearchOpen} />
-            <Link href="/cart" className="flex items-center cursor-pointer mr-4">
-              <ShoppingCart className="w-6 h-6 mr-2" />
-              <span> ({cart.length})</span>
-            </Link>
+            <div className="flex justify-end mr-4">
+              <Link href="/cart">
+                <div className="relative cursor-pointer">
+                  <ShoppingCart className="h-6 w-6 text-white" />
+                  {cart.length > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full h-5 w-5 flex items-center justify-center text-xs">
+                      {cart.length}
+                    </span>
+                  )}
+                </div>
+              </Link>
+            </div>
             {session ? (
               <div className="flex items-center">
                 <span className="mr-2">{session.user?.name}</span>
@@ -148,21 +156,25 @@ export default function CollectionPage() {
                 </li>
               </ul>
             </aside>
-            <div className="w-4/5 px-4">
+            <div className="w-4/5 px-2">
               <div className="grid grid-cols-3 gap-10">
                 {filteredProducts.map((product) => (
                   <div key={product._id} className="relative group">
-                    <div className="relative w-full h-80 mb-4 overflow-hidden rounded-lg">
+                    <Link href={`/products/${product._id}`}>
+                    <div className="relative w-full h-96 mb-4 overflow-hidden rounded-lg">
                       <Image
                         src={product.image}
                         alt={product.name}
                         layout="fill"
-                        objectFit="cover"
-                        className="rounded-lg transition-transform duration-300 group-hover:scale-110"
+                        objectFit="contain"
+                        className="rounded-lg transition-transform duration-300 group-hover:scale-105"
                       />
                       <div className="absolute flex items-center justify-center w-full bottom-0 h-16 bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <button
-                          onClick={() => handleAddToCart(product)}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleAddToCart(product)
+                          }}
                           className="bg-white/10 text-white py-2 px-4 rounded-md transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-50"
                         >
                           Add to Cart
@@ -181,17 +193,18 @@ export default function CollectionPage() {
                         </>
                       )}
                     </p>
-                    {product.status && (
+                    {/* {product.status && (
                       <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
                         {product.status}
                       </span>
-                    )}
+                    )} */}
                     {product.stock === 'out of stock' && (
                       <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
                         Out of Stock
                       </span>
                     )}
                   </div>
+                  </Link>
                 </div>
                 ))}
               </div>
