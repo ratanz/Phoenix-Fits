@@ -37,6 +37,7 @@ export default async function handler(req, res) {
         const sizes = fields.sizes ? JSON.parse(Array.isArray(fields.sizes) ? fields.sizes[0] : fields.sizes) : [];
         const stock = Array.isArray(fields.stock) ? fields.stock[0] : fields.stock;
         let imagePath = '';
+        let subImagePaths = []
 
         if (files.image && files.image.length > 0) {
           const file = files.image[0];
@@ -50,12 +51,25 @@ export default async function handler(req, res) {
           imagePath = '/default-product-image.jpg';
         }
 
+        if (files.subImages) {
+          const subImages = Array.isArray(files.subImages) ? files.subImages : [files.subImages]
+          for (const subImage of subImages) {
+            const fileName = `${Date.now()}-${subImage.originalFilename}`
+            const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
+            await fs.mkdir(uploadsDir, { recursive: true })
+            const newPath = path.join(uploadsDir, fileName)
+            await fs.copyFile(subImage.filepath, newPath)
+            subImagePaths.push(`/uploads/${fileName}`)
+          }
+        }
+
         const product = new Product({
           name,
           description,
           price: parseFloat(price),
           discount: discount ? parseFloat(discount) : undefined,
           image: imagePath,
+          subImages: subImagePaths,
           category,
           sizes,
           stock

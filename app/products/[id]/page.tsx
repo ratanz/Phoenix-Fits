@@ -7,7 +7,7 @@ import { useCart } from '@/hooks/useCart'
 import { useCustomToast } from '@/hooks/useCustomToast'
 import { Product } from '@/app/types'
 import Link from 'next/link'
-import { ShoppingCart } from 'lucide-react'
+import { ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import ToastManager from '@/components/ToastManger'
 
@@ -20,6 +20,7 @@ export default function ProductPage() {
   const { showToast } = useCustomToast()
   const fetchCount = useRef(0)
   const { data: session } = useSession()
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   const fetchProduct = useCallback(async () => {
     if (!id || fetchCount.current > 0) return
@@ -59,6 +60,18 @@ export default function ProductPage() {
     showToast('Buy Now functionality not implemented yet')
   }, [showToast])
 
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? (product?.subImages?.length || 0) : prevIndex - 1
+    )
+  }
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === (product?.subImages?.length || 0) ? 0 : prevIndex + 1
+    )
+  }
+
   if (isLoading) {
     return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white'>Loading...</div>
   }
@@ -66,6 +79,8 @@ export default function ProductPage() {
   if (!product) {
     return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white'>Product not found</div>
   }
+
+  const allImages = [product.image, ...(product.subImages || [])]
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -104,17 +119,53 @@ export default function ProductPage() {
         </div>
 
         <div className="bg-opacity-70 p-14 rounded-lg shadow-lg flex flex-col">
-          <div className="flex flex-col md:flex-row">
-            <div className="md:w-1/2 flex justify-center items-center md:mb-0">
-              <Image
-                src={product.image}
-                alt={product.name}
-                width={500}
-                height={500}
-                className="rounded-lg"
-              />
+          <div className="flex flex-col justify-evenly md:flex-row">
+            <div className="md:w-1/2 flex flex-col justify-center items-center md:mb-0">
+              <div className="relative w-full h-96">
+                <Image
+                  src={allImages[currentImageIndex]}
+                  alt={product.name}
+                  layout="fill"
+                  objectFit="contain"
+                  className="rounded-lg"
+                />
+                {allImages.length > 1 && (
+                  <>
+                    <button
+                      onClick={handlePrevImage}
+                      className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 p-2 rounded-full"
+                    >
+                      <ChevronLeft className="text-white" />
+                    </button>
+                    <button
+                      onClick={handleNextImage}
+                      className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 p-2 rounded-full"
+                    >
+                      <ChevronRight className="text-white" />
+                    </button>
+                  </>
+                )}
+              </div>
+              <div className="flex  justify-center items-center mt-4 space-x-2 overflow-x-auto">
+                {allImages.map((image, index) => (
+                  <div
+                    key={index}
+                    className={`w-24 h-24 relative cursor-pointer ${currentImageIndex === index ? 'border-2 border-white/80 rounded-md' : ''}`}
+                    onClick={() => setCurrentImageIndex(index)}
+                  >
+                    <Image
+                      src={image}
+                      alt={`${product.name} - ${index}`}
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-md"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="md:w-1/4 md:pl-2 flex flex-col justify-center items-center">
+            
+            <div className="w-1/3 p-4  flex flex-col justify-center items-center">
               <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
               <p className="text-gray-300 mb-4">{product.description}</p>
               <p className="text-2xl font-bold mb-4">₹{product.price.toFixed(2)}</p>
@@ -123,6 +174,12 @@ export default function ProductPage() {
               )} */}
               <p className="mb-4">Category: {product.category}</p>
               <p className="mb-4">Available Sizes: {product.sizes.join(', ')}</p>
+              {/* add select size */}
+              <select className="mb-4 bg-transparent border border-white/50 rounded-md p-2">
+                {product.sizes.map((size) => (
+                  <option key={size} value={size}>{size}</option>
+                ))}
+              </select>
               <p className="mb-4">Stock: {product.stock}</p>
               <div className="flex space-x-4">
                 <button

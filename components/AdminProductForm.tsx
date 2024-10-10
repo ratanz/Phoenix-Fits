@@ -19,6 +19,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
   const [price, setPrice] = useState('')
   const [discount, setDiscount] = useState('')
   const [image, setImage] = useState<File | null>(null)
+  const [subImages, setSubImages] = useState<File[]>([]);
   const [category, setCategory] = useState('')
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [stock, setStock] = useState<Product['stock']>('in stock')
@@ -31,6 +32,12 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
     );
   };
 
+  const handleSubImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setSubImages(Array.from(e.target.files))
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const formData = new FormData()
@@ -40,6 +47,9 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
     formData.append('discount', discount)
     formData.append('category', category)
     if (image) formData.append('image', image)
+    subImages.forEach((subImage, index) => {
+      formData.append(`subImages`, subImage)
+    })
     formData.append('sizes', JSON.stringify(selectedSizes));
     formData.append('stock', stock);
     try {
@@ -147,6 +157,17 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
               />
             ))}
           </div>
+        </div>
+        <div className="mb-4">
+          <p className="text-white mb-2">Sub Images (up to 5):</p>
+          <input
+            type="file"
+            onChange={handleSubImagesChange}
+            accept="image/*"
+            multiple
+            max="5"
+            className="p-2 w-full lg:w-6/12 backdrop-blur-sm bg-transparent border border-zinc-600/50 text-white rounded-md hover:scale-105 transition-all duration-300"
+          />
         </div>
       </form>
     </div>
