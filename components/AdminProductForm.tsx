@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import { Checkbox } from '@/components/Checkbox'; 
 import { Product } from '@/app/types';
 import { uploadToS3 } from '@/utils/s3';
+import LoadingAnimation from './LoadingAnimation'
 
 const categories = ['Tshirt', 'Hoodies', 'Jackets', 'Pants', 'Jorts', 'Socks']
 const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
@@ -24,8 +25,8 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
   const [category, setCategory] = useState('')
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [stock, setStock] = useState<Product['stock']>('in stock')
-
   const {showToast} = useCustomToast()
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSizeChange = (size: string) => {
     setSelectedSizes(prev => 
@@ -41,6 +42,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
     try {
       const formData = new FormData()
       formData.append('name', name)
@@ -87,11 +89,14 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
     } catch (error) {
       console.error('Error adding product:', error)
       showToast(`An error occurred while adding the product: ${(error as Error).message}`)
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
     <div className="flex items-center justify-center lg:w-[80%] w-full ml-[0%] lg:ml-[15%]">
+      {isLoading && <LoadingAnimation />}
       <form onSubmit={handleSubmit} className="mb-8 w-full lg:w-auto">
         <input
           type="text"
