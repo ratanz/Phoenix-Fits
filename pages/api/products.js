@@ -1,88 +1,123 @@
 import dbConnect from '../../lib/mongodb.js'
 import Product from '../../models/Product'
 import { IncomingForm } from 'formidable'
-import { promises as fs } from 'fs'
-import path from 'path'
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
 
 export const config = {
   api: {
     bodyParser: false,
   },
+};
+
+const s3Client = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
+
+async function uploadToS3(file, fileName) {
+  try {
+    console.log('Starting S3 upload for file:', fileName);
+    const fileBuffer = await fs.promises.readFile(file.filepath);
+    console.log('File buffer created');
+
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: `products/${fileName}`,
+      Body: fileBuffer,
+      ContentType: file.mimetype,
+    };
+    console.log('S3 upload params:', JSON.stringify(params, null, 2));
+
+    const command = new PutObjectCommand(params);
+    await s3Client.send(command);
+    console.log('File uploaded successfully');
+    return `products/${fileName}`;
+  } catch (error) {
+    console.error("Error uploading to S3:", error);
+    throw new Error(`S3 upload failed: ${error.message}`);
+  }
 }
 
 export default async function handler(req, res) {
-  await dbConnect()
+  await dbConnect();
+  console.log('Request method:', req.method);
+  console.log('Request method:', req.method);
+  console.log('S3 Bucket Name:', process.env.AWS_S3_BUCKET_NAME);
+  console.log('AWS Region:', process.env.AWS_REGION);
 
-  if (req.method === 'GET') {
-    try {
-      const products = await Product.find({})
-      res.status(200).json(products)
-    } catch (error) {
-      res.status(500).json({ error: 'Unable to fetch products' })
-    }
-  } else if (req.method === 'POST') {
-    const form = new IncomingForm()
+  if (req.method === 'POST') {
+    const form = new IncomingForm();
 
     form.parse(req, async (err, fields, files) => {
       if (err) {
-        return res.status(500).json({ error: 'Error parsing form data' })
+        console.error('Error parsing form:', err);
+        return res.status(500).json({ error: 'Error parsing form data' });
       }
 
-      try {
-        const name = Array.isArray(fields.name) ? fields.name[0] : fields.name;
-        const description = Array.isArray(fields.description) ? fields.description[0] : fields.description;
-        const price = Array.isArray(fields.price) ? fields.price[0] : fields.price;
-        const discount = Array.isArray(fields.discount) ? fields.discount[0] : fields.discount;
-        const category = Array.isArray(fields.category) ? fields.category[0] : fields.category;
-        const sizes = fields.sizes ? JSON.parse(Array.isArray(fields.sizes) ? fields.sizes[0] : fields.sizes) : [];
-        const stock = Array.isArray(fields.stock) ? fields.stock[0] : fields.stock;
-        let imagePath = '';
-        let subImagePaths = []
+      console.log('Parsed fields:', fields);
+      console.log('Parsed files:', files);
 
-        if (files.image && files.image.length > 0) {
-          const file = files.image[0];
-          const fileName = `${Date.now()}-${file.originalFilename}`;
-          const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-          await fs.mkdir(uploadsDir, { recursive: true });
-          const newPath = path.join(uploadsDir, fileName);
-          await fs.copyFile(file.filepath, newPath);
-          imagePath = `/uploads/${fileName}`;
-        } else {
-          imagePath = '/default-product-image.jpg';
+      try {
+        const { name, description, price, discount, category, sizes, stock } = fields;
+        let imagePath = '';
+        let subImagePaths = [];
+
+        if (files.image) {
+          console.log('Uploading main image');
+          const file = Array.isArray(files.image) ? files.image[0] : files.image;
+          const fileName = `${uuidv4()}-${file.originalFilename}`;
+          imagePath = await uploadToS3(file, fileName);
+          console.log('Main image uploaded:', imagePath);
         }
 
         if (files.subImages) {
-          const subImages = Array.isArray(files.subImages) ? files.subImages : [files.subImages]
+          console.log('Uploading sub-images');
+          const subImages = Array.isArray(files.subImages) ? files.subImages : [files.subImages];
           for (const subImage of subImages) {
-            const fileName = `${Date.now()}-${subImage.originalFilename}`
-            const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
-            await fs.mkdir(uploadsDir, { recursive: true })
-            const newPath = path.join(uploadsDir, fileName)
-            await fs.copyFile(subImage.filepath, newPath)
-            subImagePaths.push(`/uploads/${fileName}`)
+            const fileName = `${uuidv4()}-${subImage.originalFilename}`;
+            const subImageUrl = await uploadToS3(subImage, fileName);
+            subImagePaths.push(subImageUrl);
           }
+          console.log('Sub-images uploaded:', subImagePaths);
         }
 
         const product = new Product({
-          name,
-          description,
-          price: parseFloat(price),
-          discount: discount ? parseFloat(discount) : undefined,
+          name: Array.isArray(name) ? name[0] : name,
+          description: Array.isArray(description) ? description[0] : description,
+          price: parseFloat(Array.isArray(price) ? price[0] : price),
+          discount: discount ? parseFloat(Array.isArray(discount) ? discount[0] : discount) : undefined,
           image: imagePath,
           subImages: subImagePaths,
-          category,
-          sizes,
-          stock
+          category: Array.isArray(category) ? category[0] : category,
+          sizes: JSON.parse(Array.isArray(sizes) ? sizes[0] : sizes),
+          stock: Array.isArray(stock) ? stock[0] : stock
         });
 
-        await product.save();
-        res.status(201).json(product);
+        console.log('Product object created:', JSON.stringify(product, null, 2));
+
+        const savedProduct = await product.save();
+        console.log('Product saved:', JSON.stringify(savedProduct, null, 2));
+        return res.status(201).json(savedProduct);
       } catch (error) {
-        console.error('Error creating product:', error)
-        res.status(500).json({ error: 'Unable to create product' })
+        console.error('Error creating product:', error);
+        console.error('Error stack:', error.stack);
+        return res.status(500).json({ error: 'Unable to create product', details: error.message });
       }
-    })
+    });
+  } else if (req.method === 'GET') {
+    try {
+      const products = await Product.find({});
+      return res.status(200).json(products);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      return res.status(500).json({ error: 'Unable to fetch products' });
+    }
   } else {
-    res.status(405).json({ error: 'Method not allowed' })
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 }

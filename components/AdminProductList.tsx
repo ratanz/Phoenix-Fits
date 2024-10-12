@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import EditProductForm from './EditProductForm'
 import { useCustomToast } from '@/hooks/useCustomToast'
 import { Product } from '@/app/types'
+import { deleteFromS3 } from '@/utils/s3';
 
 interface AdminProductListProps {
   products: Product[]
@@ -13,8 +14,9 @@ interface AdminProductListProps {
 }
 
 export default function AdminProductList({ products, onProductUpdated, onProductDeleted }: AdminProductListProps) {
+  console.log('Products received:', JSON.stringify(products, null, 2));
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
-  const {showToast} = useCustomToast()
+  const { showToast } = useCustomToast()
 
   const handleEdit = (product: Product) => {
     setEditingProduct(product)
@@ -27,7 +29,7 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({...product, sizes: product.sizes || []}),
+        body: JSON.stringify({ ...product, sizes: product.sizes || [] }),
       })
       if (response.ok) {
         toast.success('Product updated successfully')
@@ -44,20 +46,29 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
 
   const handleDelete = async (id: string) => {
     try {
-      const response = await fetch(`/api/products/${id}`, {
+      const deleteResponse = await fetch(`/api/products/${id}`, {
         method: 'DELETE',
-      })
-      if (response.ok) {
-        toast.success('Product deleted successfully')
-        onProductDeleted()
+      });
+
+      if (deleteResponse.ok) {
+        toast.success('Product deleted successfully');
+        onProductDeleted();
       } else {
-        showToast('Failed to delete product')
+        const errorData = await deleteResponse.json();
+        showToast(`Failed to delete product: ${errorData.error}`);
       }
     } catch (error) {
-      console.error('Error deleting product:', error)
-      showToast('An error occurred while deleting the product')
+      console.error('Error deleting product:', error);
+      showToast('An error occurred while deleting the product');
     }
-  }
+  };
+
+  const getFullImageUrl = (imagePath: string) => {
+    if (imagePath && !imagePath.startsWith('http')) {
+      return `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${imagePath}`;
+    }
+    return imagePath || '';
+  };
 
   return (
     <div className='flex flex-col justify-center items-start w-full lg:p-24 p-4'>
@@ -72,8 +83,13 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
                 <p className='text-gray-300 mb-3'>{product.description}</p>
                 <p className='text-zinc -100'>Price: ₹{product.price}</p>
                 {product.discount && <p className='text-green-400'>Discount: ₹{product.discount}</p>}
-               
-                <img src={product.image} alt={product.name} className="w-fit h-fit object-cover mt-2 rounded-xl" />
+
+                <img
+                  src={getFullImageUrl(product.image)}
+                  alt={product.name}
+                  className="w-64 h-64 object-cover mt-2 rounded-xl"
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }}
+                />
                 <div className="mt-2">
                   <button
                     onClick={() => handleEdit(product)}
@@ -92,10 +108,10 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
             </div>
             {editingProduct && editingProduct._id === product._id && (
               <div className="flex-1 lg:absolute lg:inset-10 lg:bg-white lg:dark:bg-transparent lg:z-10">
-                <EditProductForm 
-                  product={{...editingProduct, sizes: editingProduct.sizes || []}} 
-                  onSave={handleSave} 
-                  onCancel={() => setEditingProduct(null)} 
+                <EditProductForm
+                  product={{ ...editingProduct, sizes: editingProduct.sizes || [] }}
+                  onSave={handleSave}
+                  onCancel={() => setEditingProduct(null)}
                 />
               </div>
             )}
@@ -103,8 +119,8 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
               Sizes: {product.sizes && product.sizes.length > 0 ? product.sizes.join(', ') : 'No sizes available'}
             </p>
             <p className={`text-${product.stock === 'in stock' ? 'green' : 'red'}-400 text-sm mt-2 flex justify-center items-center `}>
-                  Stock: {product.stock}
-                </p>
+              Stock: {product.stock}
+            </p>
           </div>
         ))}
       </div>

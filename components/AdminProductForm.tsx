@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { Checkbox } from '@/components/Checkbox'; 
 import { Product } from '@/app/types';
+import { uploadToS3 } from '@/utils/s3';
 
 const categories = ['Tshirt', 'Hoodies', 'Jackets', 'Pants', 'Jorts', 'Socks']
 const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
@@ -40,23 +41,29 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const formData = new FormData()
-    formData.append('name', name)
-    formData.append('description', description)
-    formData.append('price', price)
-    formData.append('discount', discount)
-    formData.append('category', category)
-    if (image) formData.append('image', image)
-    subImages.forEach((subImage, index) => {
-      formData.append(`subImages`, subImage)
-    })
-    formData.append('sizes', JSON.stringify(selectedSizes));
-    formData.append('stock', stock);
     try {
+      const formData = new FormData()
+      formData.append('name', name)
+      formData.append('description', description)
+      formData.append('price', price)
+      formData.append('discount', discount)
+      formData.append('category', category)
+      formData.append('sizes', JSON.stringify(selectedSizes))
+      formData.append('stock', stock)
+
+      if (image) {
+        formData.append('image', image)
+      }
+
+      subImages.forEach((subImage) => {
+        formData.append('subImages', subImage)
+      })
+
       const response = await fetch('/api/products', {
         method: 'POST',
         body: formData,
       })
+
       if (response.ok) {
         const data = await response.json()
         console.log('Product added:', data)
@@ -68,7 +75,9 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
         setPrice('')
         setDiscount('')
         setImage(null)
+        setSubImages([])
         setCategory('')
+        setSelectedSizes([])
         setStock('in stock')
       } else {
         const errorData = await response.json()
@@ -77,7 +86,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
       }
     } catch (error) {
       console.error('Error adding product:', error)
-      showToast('An error occurred while adding the product', 'error')
+      showToast(`An error occurred while adding the product: ${(error as Error).message}`)
     }
   }
 
