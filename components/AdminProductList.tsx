@@ -87,7 +87,7 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
                 <img
                   src={getFullImageUrl(product.image)}
                   alt={product.name}
-                  className="w-64 h-64 object-cover mt-2 rounded-xl"
+                  className="w-fit h-fit object-cover mt-2 rounded-xl"
                   onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }}
                 />
                 <div className="mt-2">

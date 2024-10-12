@@ -26,15 +26,29 @@ export default function CollectionPage() {
 
   console.log('Current session:', session);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     async function fetchProducts() {
-      const response = await fetch('/api/products')
-      const data = await response.json()
-      console.log('Fetched products:', data) 
-      setProducts(data as Product[])
+      if (!loading) return;
+      try {
+        const response = await fetch('/api/products')
+        if (response.ok) {
+          const data = await response.json()
+          console.log('Fetched products:', data)
+          setProducts(data as Product[])
+        } else {
+          showToast('Failed to fetch products')
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error)
+        showToast('An error occurred while fetching products')
+      } finally {
+        setLoading(false);
+      }
     }
     fetchProducts()
-  }, [])
+  }, [showToast, loading])
 
   const filteredProducts = selectedCategory
     ? products.filter(product => product.category === selectedCategory)
@@ -163,8 +177,8 @@ export default function CollectionPage() {
                     <Link href={`/products/${product._id}`}>
                     <div className="relative w-full h-96 mb-4 overflow-hidden rounded-lg">
                       <Image
-                        src={product.image}
-                        alt={product.name}
+                         src={`${process.env.NEXT_PUBLIC_S3_URL}${product.image}`}
+                         alt={product.name}
                         layout="fill"
                         objectFit="contain"
                         className="rounded-lg transition-transform duration-300 group-hover:scale-105"

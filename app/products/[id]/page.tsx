@@ -87,7 +87,7 @@ export default function ProductPage() {
     return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white'>Product not found</div>
   }
 
-  const allImages = [product.image, ...(product.subImages || [])]
+  const allImages = [product.image, ...(product.subImages || [])].map(img => `${process.env.NEXT_PUBLIC_S3_URL}${img}`);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -102,11 +102,17 @@ export default function ProductPage() {
         Your browser does not support the video tag.
       </video>
 
-      <div className="relative z-10 container mx-auto px-10 py-10">
+      <div className="relative z-10 container mx-auto px-10 py-10 font-judas">
        
-        <div className="flex justify-between items-center p-4 ">
-          <div className="flex-grow"></div>
-          <div className="logo flex justify-center flex-grow">
+        <div className="flex justify-between items-center w-full p-4 ">
+
+          <Link href="/collections/all">
+            <button className='text-white'>
+              <ChevronLeft className='hover:scale-110 transition-all duration-150' />
+            </button>
+          </Link>
+          
+          <div className="logo flex w-full justify-center items-center flex-grow">
             <Link href="/collections/all">
               <Image src="/images/gorba.png" alt="logo" width={80} height={100} />
             </Link>
