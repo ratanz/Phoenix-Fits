@@ -12,7 +12,7 @@ import { ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import ToastManager from '@/components/ToastManger'
 import gsap from 'gsap'
-import MagnetAnimation from '@/components/MagnetAnimation'
+import Magnetic from '@/components/MagnetAnimation'
 
 export default function ProductPage() {
   const params = useParams()
@@ -247,7 +247,7 @@ export default function ProductPage() {
               <p className="mb-4 text-sm md:text-base">Stock: {product.stock}</p>
               
               <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 lg:mt-0 mt-6 w-full max-w-xs">
-                <MagnetAnimation>
+                <Magnetic>
                 <button
                   onClick={handleAddToCart}
                   className="bg-transparent backdrop:blur-sm text-white px-4 py-2 rounded border border-white/50 w-full relative overflow-hidden group"
@@ -257,8 +257,8 @@ export default function ProductPage() {
                     Add to Cart
                   </span>
                   </button>
-                </MagnetAnimation>
-                <MagnetAnimation>
+                </Magnetic>
+                <Magnetic>
                 <button
                   onClick={handleBuyNow}
                   className="bg-transparent backdrop:blur-sm text-white px-4 py-2 rounded border border-white/50 w-full relative overflow-hidden group"
@@ -268,7 +268,7 @@ export default function ProductPage() {
                     Buy Now
                   </span>
                 </button>
-                </MagnetAnimation>
+                </Magnetic>
               </div>
             </div>
 

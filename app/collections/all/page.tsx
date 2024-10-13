@@ -175,7 +175,7 @@ export default function CollectionPage() {
                 <li className="mb-2">
                   <button
                     onClick={() => setSelectedCategory(null)}
-                    className={`${selectedCategory === null ? 'font-bold text-blue-500' : ''}`}
+                    className={`${selectedCategory === null ? 'font-bold text-blue-500 transition-all duration-300 transform hover:translate-x-2 hover:scale-105 ' : ''}`}
                   >
                     All Products
                   </button>
@@ -194,9 +194,9 @@ export default function CollectionPage() {
                         layout="fill"
                         objectFit="contain"
                         className="rounded-lg transition-transform duration-300 group-hover:scale-105"
-                      />
+                        />
+                        <Magnetic>
                       <div className="absolute flex items-center justify-center w-full bottom-0 h-16 bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        
                         <button
                           onClick={(e) => {
                             e.preventDefault()
@@ -207,6 +207,7 @@ export default function CollectionPage() {
                           Add to Cart
                         </button>
                       </div>
+                        </Magnetic>
                     </div>
                     <div className="flex flex-col items-center">
                       <h3 className="text-2xl font-medium">{product.name}</h3>
