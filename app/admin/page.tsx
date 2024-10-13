@@ -4,18 +4,47 @@ import React, { useState, useEffect } from 'react'
 import AdminProductForm from '@/components/AdminProductForm'
 import AdminProductList from '@/components/AdminProductList'
 import ToastManager from '@/components/ToastManger'
+import AdminLoginPopup from '@/components/AdminLoginPopup'
+import { useCustomToast } from '@/hooks/useCustomToast'
 
 export default function AdminPage() {
   const [products, setProducts] = useState([])
-
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const { showToast } = useCustomToast()
   useEffect(() => {
-    fetchProducts()
+    checkAuth()
   }, [])
+
+  const checkAuth = async () => {
+    const response = await fetch('/api/admin/check-auth')
+    if (response.ok) {
+      setIsAuthenticated(true)
+      fetchProducts()
+    }
+  }
 
   const fetchProducts = async () => {
     const response = await fetch('/api/products')
     const data = await response.json()
     setProducts(data)
+  }
+
+  const handleLogin = async (username: string, password: string) => {
+    const response = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    })
+
+    if (response.ok) {
+      setIsAuthenticated(true)
+      fetchProducts()
+    } else {
+      alert('Invalid credentials')
+    }
+  }
+  if (!isAuthenticated) {
+    return <AdminLoginPopup onLogin={handleLogin} />
   }
 
   return (
