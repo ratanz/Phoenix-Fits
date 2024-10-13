@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingCart, Search, User, LogOut } from 'lucide-react'
@@ -10,6 +10,8 @@ import { Product } from '@/app/types'
 import { useCustomToast } from '@/hooks/useCustomToast'
 import ToastManager from '@/components/ToastManger'
 import SearchPopup from '@/components/SearchPopup'
+import gsap from 'gsap'
+import Magnetic from '@/components/MagnetAnimation'
 
 const categories = ['Tshirt', 'Hoodies', 'Jackets', 'Pants', 'Jorts', 'Socks']
 
@@ -18,10 +20,10 @@ export default function CollectionPage() {
   const { cart, addToCart } = useCart();
   const [products, setProducts] = useState<Product[]>([])
   const { showToast } = useCustomToast();
+  const contentRef = useRef(null)
 
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchResults, setSearchResults] = useState<Product[]>([])
-
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
   console.log('Current session:', session);
@@ -49,6 +51,16 @@ export default function CollectionPage() {
     }
     fetchProducts()
   }, [showToast, loading])
+
+  useEffect(() => {
+    if (!loading && contentRef.current) {
+      gsap.fromTo(
+        contentRef.current,
+        { opacity: 0, y: 90 },
+        { opacity: 1, y: 0, duration: 1.1, ease: 'power3.out' }
+      )
+    }
+  }, [loading])
 
   const filteredProducts = selectedCategory
     ? products.filter(product => product.category === selectedCategory)
@@ -103,16 +115,16 @@ export default function CollectionPage() {
         <source src="/video/starseffect.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-
-      <div className="relative p-10 z-10 min-h-screen bg-black bg-opacity-30 text-white font-spacer ">
-        <header className="p-4  pl-10 flex justify-between items-center ">
+      <div 
+        className="relative p-6 z-10 min-h-screen bg-black bg-opacity-30 text-white font-spacer opacity-0" 
+        ref={contentRef}
+      >
+        <header className="flex justify-between items-center mb-8">
           <nav className='flex justify-center items-center '>
-            {/* <Link href="/shop" className="mr-4 hover:text-gray-300">Shop</Link> */}
             <Link href="/contact" className="hover:text-gray-300">Contact</Link>
           </nav>
           <div className="logo">
-            {/* <h3 className='text-4xl font-judas'>GORBA</h3> */}
-            <Image src="/images/gorba.png" alt="GORBA" width={110} height={20} className='w-24 h-24' />
+            <Image src="/images/gorba.png" alt="GORBA" width={115} height={20} className='w-20 h-20' />
           </div>
           
           <div className="flex items-center justify-end w-fit ">
@@ -120,7 +132,7 @@ export default function CollectionPage() {
             <div className="flex justify-end mr-4">
               <Link href="/cart">
                 <div className="relative cursor-pointer">
-                  <ShoppingCart className="h-6 w-6 text-white" />
+                  <ShoppingCart className="h-6 w-6 text-white hover:text-blue-400 transition-all duration-150" />
                   {cart.length > 0 && (
                     <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full h-5 w-5 flex items-center justify-center text-xs">
                       {cart.length}
@@ -131,9 +143,9 @@ export default function CollectionPage() {
             </div>
             {session ? (
               <div className="flex items-center">
-                <span className="mr-2">{session.user?.name}</span>
-                <button onClick={() => signOut()} className=" text-white px-2 py-1 rounded ">
-                  <LogOut className="w-4 h-4 mr-1" />
+                {/* <span className="mr-2">{session.user?.name}</span> */}
+                <button onClick={() => signOut()} className=" text-white px-2 py-1 rounded-md">
+                  <LogOut className="w-6 h-6 mr-1 hover:text-red-500 transition-all duration-150 rounded-md" />
                 </button>
               </div>
             ) : (
@@ -184,6 +196,7 @@ export default function CollectionPage() {
                         className="rounded-lg transition-transform duration-300 group-hover:scale-105"
                       />
                       <div className="absolute flex items-center justify-center w-full bottom-0 h-16 bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        
                         <button
                           onClick={(e) => {
                             e.preventDefault()
