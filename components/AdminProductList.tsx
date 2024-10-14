@@ -81,9 +81,17 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
               <div className="flex justify-center items-center flex-col">
                 <h3 className="font-bold text-2xl">{product.name}</h3>
                 <p className='text-gray-300 mb-3'>{product.description}</p>
-                <p className='text-zinc -100'>Price: ₹{product.price}</p>
-                {product.discount && <p className='text-green-400'>Discount: ₹{product.discount}</p>}
-
+                <p className='text-zinc -100'>Price: ₹{product.price.toFixed(2)}</p>
+                {product.discount && product.discount > 0 && (
+                  <>
+                    <p className='text-green-400'>
+                      Discounted Price: ₹{(product.price - product.discount).toFixed(2)}
+                    </p>
+                    {/* <p className='text-green-400'>
+                      Discount: {((product.discount / product.price) * 100).toFixed(0)}% off
+                    </p> */}
+                  </>
+                )}
                 <img
                   src={getFullImageUrl(product.image)}
                   alt={product.name}

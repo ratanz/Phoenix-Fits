@@ -15,7 +15,10 @@ export default function CartPage() {
 
   console.log('Cart contents in CartPage:', cart);
 
-  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const total = cart.reduce((sum, item) => {
+    const itemPrice = item.discount && item.discount > 0 ? item.price - item.discount : item.price;
+    return sum + (itemPrice * item.quantity);
+  }, 0);
 
   const handleQuantityChange = async (productId: string, newQuantity: number) => {
     if (newQuantity === 0) {
@@ -37,7 +40,7 @@ export default function CartPage() {
         <source src="/video/starseffect.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-    <div className="relative z-50 px-24 p-10 text-white font-judas ">
+    <div className="relative z-50 px-24 p-10 text-white font-spacer ">
       <h1 className="text-3xl font-bold mb-8 p-3 flex items-center justify-center">Your Cart</h1>
       {cart.length === 0 ? (
         <p>Your cart is empty.</p>
@@ -48,25 +51,34 @@ export default function CartPage() {
               <Image src={item.image} alt={item.name} width={150} height={150} className="rounded-md mr-2" />
               <div className="flex-grow">
                 <h2 className="text-xl font-semibold">{item.name}</h2>
-                {/* <p className="text-gray-400">₹{item.price.toFixed(2)}</p> */}
+                <div className="flex items-center mt-2">
+                  {item.discount && item.discount > 0 ? (
+                    <>
+                      <p className="text-gray-400 line-through mr-2">₹{item.price.toFixed(2)}</p>
+                      <p className="text-green-400">₹{(item.price - item.discount).toFixed(2)}</p>
+                    </>
+                  ) : (
+                    <p className="text-gray-400">₹{item.price.toFixed(2)}</p>
+                  )}
+                </div>
                 <div className="flex items-center mt-2">
                   <button
                     onClick={() => handleQuantityChange(item._id, item.quantity - 1)}
-                    className="bg-transparent borde text-white px-2  rounded-md"
+                    className="text-white px-2 rounded-md"
                   >
                     -
                   </button>
                   <span className="mx-2">{item.quantity}</span>
                   <button
                     onClick={() => handleQuantityChange(item._id, item.quantity + 1)}
-                    className=" text-white px-2 py-1 rounded-md"
+                    className="text-white px-2 py-1 rounded-md"
                   >
                     +
                   </button>
                 </div>
               </div>
               <p className="text-xl font-semibold mr-4">
-                ₹{(item.price * item.quantity).toFixed(2)}
+                ₹{((item.discount && item.discount > 0 ? item.price - item.discount : item.price) * item.quantity).toFixed(2)}
               </p>
               <button
                 onClick={() => removeFromCart(item._id)}
@@ -84,7 +96,7 @@ export default function CartPage() {
           ))}
           <div className="mt-8 flex flex-col items-center justify-center">
             <p className="text-2xl font-bold">Subtotal: ₹{total.toFixed(2)}</p>
-            <button className=" text-white px-6 py-3 rounded-md mt-4 hover:scale-105  transition-all duration-300">
+            <button className="bg-transparent border border-zinc-600/50 text-white p-2 px-4 rounded-xl mr-2">
               Checkout
             </button>
           </div>

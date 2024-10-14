@@ -73,7 +73,7 @@ export default function CollectionPage() {
       showToast('Please sign in to add items to your cart');
     }
   };
-  
+
   const handleSearchOpen = () => {
     setIsSearchOpen(true);
   };
@@ -102,6 +102,10 @@ export default function CollectionPage() {
     }
   };
 
+  if (loading) {
+    return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white'>Loading...</div>
+  }
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       <ToastManager />
@@ -115,8 +119,8 @@ export default function CollectionPage() {
         <source src="/video/starseffect.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-      <div 
-        className="relative p-6 z-10 min-h-screen bg-black bg-opacity-30 text-white font-spacer opacity-0" 
+      <div
+        className="relative p-6 z-10 min-h-screen bg-black bg-opacity-30 text-white font-spacer opacity-0"
         ref={contentRef}
       >
         <header className="flex justify-between items-center mb-8">
@@ -126,7 +130,7 @@ export default function CollectionPage() {
           <div className="logo">
             <Image src="/images/gorba.png" alt="GORBA" width={115} height={20} className='w-20 h-20' />
           </div>
-          
+
           <div className="flex items-center justify-end w-fit ">
             <Search className="w-6 h-6 mr-4 cursor-pointer hover:text-gray-300" onClick={handleSearchOpen} />
             <div className="flex justify-end mr-4">
@@ -155,7 +159,7 @@ export default function CollectionPage() {
             )}
           </div>
         </header>
-        
+
 
         <main className="container mx-auto px-2 py-4">
           <div className="flex">
@@ -187,53 +191,57 @@ export default function CollectionPage() {
                 {filteredProducts.map((product) => (
                   <div key={product._id} className="relative group">
                     <Link href={`/products/${product._id}`}>
-                    <div className="relative w-full h-96 mb-4 overflow-hidden rounded-lg">
-                      <Image
-                         src={`${process.env.NEXT_PUBLIC_S3_URL}${product.image}`}
-                         alt={product.name}
-                        layout="fill"
-                        objectFit="contain"
-                        className="rounded-lg transition-transform duration-300 group-hover:scale-105"
+                      <div className="relative w-full h-96 mb-4 overflow-hidden rounded-lg">
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_S3_URL}${product.image}`}
+                          alt={product.name}
+                          layout="fill"
+                          objectFit="contain"
+                          className="rounded-lg transition-transform duration-300 group-hover:scale-105"
                         />
                         <Magnetic>
-                      <div className="absolute flex items-center justify-center w-full bottom-0 h-16 bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault()
-                            handleAddToCart(product)
-                          }}
-                          className="bg-white/10 text-white py-2 px-4 rounded-md transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-50"
-                        >
-                          Add to Cart
-                        </button>
-                      </div>
+                          <div className="absolute flex items-center justify-center w-full bottom-0 h-16 bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault()
+                                handleAddToCart(product)
+                              }}
+                              className="bg-white/10 text-white py-2 px-4 rounded-md transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-50"
+                            >
+                              Add to Cart
+                            </button>
+                          </div>
                         </Magnetic>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <h3 className="text-2xl font-medium">{product.name}</h3>
-                      <p className="text-sm text-gray-400 mt-1 mb-2">{product.description}</p>
-                      <p className="text-sm text-gray-00">
-                      ₹{product.price.toFixed(2)}
-                      {product.discount && (
-                        <>
-                          {' '}
-                          <span className="line-through">₹{(product.price - product.discount).toFixed(2)}</span>
-                        </>
-                      )}
-                    </p>
-                    {/* {product.status && (
-                      <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-                        {product.status}
-                      </span>
-                    )} */}
-                    {product.stock === 'out of stock' && (
-                      <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-                        Out of Stock
-                      </span>
-                    )}
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <h3 className="text-2xl font-medium">{product.name}</h3>
+                        <p className="text-sm text-gray-400 mt-1 mb-2">{product.description}</p>
+                        <p className="text-sm text-gray-300">
+                          {product.discount && product.discount > 0 ? (
+                            <>
+                              <span className="line-through text-gray-400 mr-2">₹{product.price.toFixed(2)}</span>
+                              <span className="text-green-400">₹{(product.price - product.discount).toFixed(2)}</span>
+                              {/* <span className="text-xs text-green-400 ml-1">
+                                ({((product.discount / product.price) * 100).toFixed(0)}% off)
+                              </span> */}
+                            </>
+                          ) : (
+                            `₹${product.price.toFixed(2)}`
+                          )}
+                        </p>
+                        {/* {product.status && (
+                        <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
+                          {product.status}
+                        </span>
+                      )} */}
+                        {product.stock === 'out of stock' && (
+                          <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
+                            Out of Stock
+                          </span>
+                        )}
+                      </div>
+                    </Link>
                   </div>
-                  </Link>
-                </div>
                 ))}
               </div>
             </div>

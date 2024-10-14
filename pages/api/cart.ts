@@ -37,6 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               _id: item.product._id,
               name: item.product.name,
               price: item.product.price,
+              discount : item.product.discount,
               image: item.product.image,
               quantity: item.quantity,
             }));

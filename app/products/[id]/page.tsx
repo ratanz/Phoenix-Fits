@@ -79,11 +79,11 @@ export default function ProductPage() {
                 ? (prevIndex === (product?.subImages?.length || 0) ? 0 : prevIndex + 1)
                 : (prevIndex === 0 ? (product?.subImages?.length || 0) : prevIndex - 1);
             }
-            
+
             gsap.fromTo(
               imageRef.current,
               { opacity: 0, x: direction === 'next' ? 50 : -50 },
-              { opacity: 1, x: 0, duration: 0.3 , delay: 0.10 }
+              { opacity: 1, x: 0, duration: 0.3, delay: 0.10 }
             )
             return newIndex;
           })
@@ -149,7 +149,7 @@ export default function ProductPage() {
       </video>
 
       <div className="relative z-10 container mx-auto p-4 font-spacer" ref={productRef}>
-       
+
         <div className="flex p-6 items-center w-full  ">
 
           <Link href="/collections/all">
@@ -157,7 +157,7 @@ export default function ProductPage() {
               <ChevronLeft className='hover:scale-110 transition-all duration-150' />
             </button>
           </Link>
-          
+
           <div className="logo flex w-full h-20  justify-center items-center flex-grow">
             <Link href="/collections/all">
               <Image src="/images/gorba.png" alt="logo" width={80} height={100} />
@@ -212,9 +212,8 @@ export default function ProductPage() {
                 {allImages.map((image, index) => (
                   <div
                     key={index}
-                    className={`w-36 h-36 relative cursor-pointer  ${
-                      currentImageIndex === index ? 'border border-white/50 rounded-md' : ''
-                    }`}
+                    className={`w-36 h-36 relative cursor-pointer  ${currentImageIndex === index ? 'border border-white/50 rounded-md' : ''
+                      }`}
                     onClick={() => handleThumbnailClick(index)}
                   >
                     <Image
@@ -228,14 +227,23 @@ export default function ProductPage() {
                 ))}
               </div>
             </div>
-            
+
             <div className="w-full md:w-1/3 lg:p-4 p-10 flex flex-col justify-center items-center lg:mt-0 mt-14">
               <h1 className="text-2xl md:text-3xl font-bold mb-4 text-center">{product.name}</h1>
               <p className="text-gray-300 mb-4 text-sm md:text-base text-center">{product.description}</p>
-              <p className="text-xl md:text-2xl font-bold mb-4">₹{product.price.toFixed(2)}</p>
-              {/* {product.discount && (b
-                <p className="text-green-500 mb-4">Discount: ₹{product.discount.toFixed(2)}</p>
-              )} */}
+              <p className="text-xl md:text-2xl font-bold mb-4">
+                {product.discount && product.discount > 0 ? (
+                  <>
+                    <span className="line-through text-gray-400 mr-2">₹{product.price.toFixed(2)}</span>
+                    <span className="text-green-400">₹{(product.price - product.discount).toFixed(2)}</span>
+                    <span className="text-sm text-green-400 ml-2">
+                      ({((product.discount / product.price) * 100).toFixed(0)}% off)
+                    </span>
+                  </>
+                ) : (
+                  `₹${product.price.toFixed(2)}`
+                )}
+              </p>
               <p className="mb-4 text-sm md:text-base">Category: {product.category}</p>
               <p className="mb-4 text-sm md:text-base">Available Sizes: {product.sizes.join(', ')}</p>
               {/* add select size */}
@@ -245,29 +253,29 @@ export default function ProductPage() {
                 ))}
               </select>
               <p className="mb-4 text-sm md:text-base">Stock: {product.stock}</p>
-              
+
               <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 lg:mt-0 mt-6 w-full max-w-xs">
                 <Magnetic>
-                <button
-                  onClick={handleAddToCart}
-                  className="bg-transparent backdrop:blur-sm text-white px-4 py-2 rounded border border-white/50 w-full relative overflow-hidden group"
-                >
-                  <span className="absolute inset-0 bg-blue-500/80 transform scale-0 transition-transform duration-500 origin-center rounded-full group-hover:scale-100 group-hover:rounded-none"></span>
-                  <span className="relative z-10 transition-colors duration-500 group-hover:text-white">
-                    Add to Cart
-                  </span>
+                  <button
+                    onClick={handleAddToCart}
+                    className="bg-transparent backdrop:blur-sm text-white px-4 py-2 rounded border border-white/50 w-full relative overflow-hidden group"
+                  >
+                    <span className="absolute inset-0 bg-blue-500/80 transform scale-0 transition-transform duration-500 origin-center rounded-full group-hover:scale-100 group-hover:rounded-none"></span>
+                    <span className="relative z-10 transition-colors duration-500 group-hover:text-white">
+                      Add to Cart
+                    </span>
                   </button>
                 </Magnetic>
                 <Magnetic>
-                <button
-                  onClick={handleBuyNow}
-                  className="bg-transparent backdrop:blur-sm text-white px-4 py-2 rounded border border-white/50 w-full relative overflow-hidden group"
-                >
-                  <span className="absolute inset-0 bg-red-500/80 transform scale-0 transition-transform duration-500 origin-center rounded-full group-hover:scale-100 group-hover:rounded-none"></span>
-                  <span className="relative z-10 transition-colors duration-500 group-hover:text-white">
-                    Buy Now
-                  </span>
-                </button>
+                  <button
+                    onClick={handleBuyNow}
+                    className="bg-transparent backdrop:blur-sm text-white px-4 py-2 rounded border border-white/50 w-full relative overflow-hidden group"
+                  >
+                    <span className="absolute inset-0 bg-red-500/80 transform scale-0 transition-transform duration-500 origin-center rounded-full group-hover:scale-100 group-hover:rounded-none"></span>
+                    <span className="relative z-10 transition-colors duration-500 group-hover:text-white">
+                      Buy Now
+                    </span>
+                  </button>
                 </Magnetic>
               </div>
             </div>
