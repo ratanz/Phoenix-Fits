@@ -33,47 +33,52 @@ export default function EditProductForm({ product, onSave, onCancel }: EditProdu
   }
 
   return (
-    <div className="content flex justify-center items-center w-full lg:pt-16 pt-4 ">
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="space-y-4 ">
+      <h2 className="text-2xl font-bold mb-4">Edit Product</h2>
+      <div className='flex flex-col p-6 px-4 gap-6 '>
       <input
         type="text"
         name="name"
         value={editedProduct.name}
         onChange={handleChange}
-        className="mb-2 p-2 bg-transparent border border-zinc-600/30 w-full backdrop-blur-sm text-white rounded-md"
+        className="w-full p-2 bg-transparent border border-zinc-600/30 text-white rounded-md"
+        placeholder="Product Name"
       />
       <textarea
         name="description"
         value={editedProduct.description}
         onChange={handleChange}
-        className="mb-2 p-2 w-full bg-transparent border border-zinc-600/30 text-white rounded-md"
+        className="w-full p-2 bg-transparent border border-zinc-600/30 text-white rounded-md"
+        placeholder="Description"
       />
       <input
         type="number"
         name="price"
         value={editedProduct.price}
         onChange={handleChange}
-        className="mb-2 p-2 w-full bg-transparent border border-zinc-600/30 text-white rounded-md"
+        className="w-full p-2 bg-transparent border border-zinc-600/30 text-white rounded-md"
+        placeholder="Price"
       />
       <input
         type="number"
         name="discount"
         value={editedProduct.discount || ''}
         onChange={handleChange}
-        className="mb-2 p-4 w-full bg-transparent border border-zinc-600/30 text-white rounded-md"
+        className="w-full p-2 bg-transparent border border-zinc-600/30 text-white rounded-md"
+        placeholder="Discount"
       />
       <select
         name="stock"
         value={editedProduct.stock}
         onChange={handleChange}
-        className="mb-2 p-2 w-full bg-transparent border border-zinc-600/30 text-white rounded-md"
+        className="w-full p-2 bg-transparent border border-zinc-600/30 text-white rounded-md"
       >
         <option value="in stock">In Stock</option>
         <option value="out of stock">Out of Stock</option>
       </select>
-      <div className="mb-4">
+      <div>
         <p className="text-white mb-2">Available Sizes:</p>
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-2">
           {sizes.map((size) => (
             <Checkbox
               key={size}
@@ -84,9 +89,11 @@ export default function EditProductForm({ product, onSave, onCancel }: EditProdu
           ))}
         </div>
       </div>
-      <button type="submit" className="bg-zinc-800 text-white p-2 rounded mr-2">Save</button>
-      <button type="button" onClick={onCancel} className="bg-transparent border border-zinc-600/50 text-white p-2 rounded-md">Cancel</button>
-    </form>
+      <div className="flex justify-between mt-4">
+        <button type="submit" className="bg-transparent border border-zinc-600/50 text-white p-2 rounded-md">Save</button>
+        <button type="button" onClick={onCancel} className="bg-transparent border border-zinc-600/50 text-white p-2 rounded-md">Cancel</button>
+      </div>
     </div>
+    </form>
   )
 }

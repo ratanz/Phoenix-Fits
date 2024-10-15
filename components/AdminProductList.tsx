@@ -77,61 +77,57 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map((product) => (
           <div key={product._id} className="lg:mb-2 p-6 border border-zinc-600 rounded-xl bg-transparent backdrop-blur-sm z-10 shadow-lg shadow-zinc-500/50 relative hover:translate-y-[-7px] transition-all duration-300 ease-in-out mt-10">
-            <div className={`flex flex-col md:flex-row gap-4 ${editingProduct && editingProduct._id === product._id ? 'lg:hidden' : ''}`}>
-              <div className="flex justify-center items-center flex-col">
-                <h3 className="font-bold text-2xl">{product.name}</h3>
-                <p className='text-gray-300 mb-3'>{product.description}</p>
-                <p className='text-zinc -100'>Price: ₹{product.price.toFixed(2)}</p>
-                {product.discount && product.discount > 0 && (
-                  <>
-                    <p className='text-green-400'>
-                      Discounted Price: ₹{(product.price - product.discount).toFixed(2)}
-                    </p>
-                    {/* <p className='text-green-400'>
-                      Discount: {((product.discount / product.price) * 100).toFixed(0)}% off
-                    </p> */}
-                  </>
-                )}
-                <img
-                  src={getFullImageUrl(product.image)}
-                  alt={product.name}
-                  className="w-fit h-fit object-cover mt-2 rounded-xl"
-                  onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }}
-                />
-                <div className="mt-2">
-                  <button
-                    onClick={() => handleEdit(product)}
-                    className="bg-transparent border border-zinc-600/50 text-white p-2 px-4 rounded-xl mr-2"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(product._id)}
-                    className="bg-red-600 bg-opacity-90 border border-zinc-600/50 text-white p-2 px-4 rounded-xl"
-                  >
-                    Delete
-                  </button>
-                </div>
+            <div className="flex flex-col justify-center items-center">
+              <h3 className="font-bold text-2xl">{product.name}</h3>
+              <p className='text-gray-300 mb-3'>{product.description}</p>
+              <p className='text-zinc-100'>Price: ₹{product.price.toFixed(2)}</p>
+              {product.discount && product.discount > 0 && (
+                <p className='text-green-400'>
+                  Discounted Price: ₹{(product.price - product.discount).toFixed(2)}
+                </p>
+              )}
+              <img
+                src={getFullImageUrl(product.image)}
+                alt={product.name}
+                className="w-fit h-fit object-cover mt-2 rounded-xl"
+                onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }}
+              />
+              <div className="mt-2">
+                <button
+                  onClick={() => handleEdit(product)}
+                  className="bg-transparent border border-zinc-600/50 text-white p-2 px-4 rounded-xl mr-2"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(product._id)}
+                  className="bg-red-600 bg-opacity-90 border border-zinc-600/50 text-white p-2 px-4 rounded-xl"
+                >
+                  Delete
+                </button>
               </div>
+              <p className='text-zinc-100/50 text-sm mt-4'>
+                Sizes: {product.sizes && product.sizes.length > 0 ? product.sizes.join(', ') : 'No sizes available'}
+              </p>
+              <p className={`text-${product.stock === 'in stock' ? 'green' : 'red'}-400 text-sm mt-2`}>
+                Stock: {product.stock}
+              </p>
             </div>
-            {editingProduct && editingProduct._id === product._id && (
-              <div className="flex-1 lg:absolute lg:inset-10 lg:bg-white lg:dark:bg-transparent lg:z-10">
-                <EditProductForm
-                  product={{ ...editingProduct, sizes: editingProduct.sizes || [] }}
-                  onSave={handleSave}
-                  onCancel={() => setEditingProduct(null)}
-                />
-              </div>
-            )}
-            <p className='text-zinc-100/50 text-sm mt-4 flex justify-center items-center'>
-              Sizes: {product.sizes && product.sizes.length > 0 ? product.sizes.join(', ') : 'No sizes available'}
-            </p>
-            <p className={`text-${product.stock === 'in stock' ? 'green' : 'red'}-400 text-sm mt-2 flex justify-center items-center `}>
-              Stock: {product.stock}
-            </p>
           </div>
         ))}
       </div>
+
+      {editingProduct && (
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+          <div className="bg-transparent backdrop-blur-md border border-zinc-400/50 p-6 rounded-xl w-full max-w-md">
+            <EditProductForm
+              product={editingProduct}
+              onSave={handleSave}
+              onCancel={() => setEditingProduct(null)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

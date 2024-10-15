@@ -166,7 +166,7 @@ export default function ProductPage() {
           <div className="flex justify-end flex-grow">
             <Link href="/cart">
               <div className="relative cursor-pointer ml-10">
-                <ShoppingCart className="h-6 w-6 text-white" />
+                <ShoppingCart className="h-6 w-6 text-white transition-all duration-300" />
                 {cart.length > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full h-4 w-4 flex items-center justify-center text-xs">
                     {cart.length}
