@@ -120,11 +120,11 @@ export default function CollectionPage() {
         Your browser does not support the video tag.
       </video>
       <div
-        className="relative p-6 z-10 min-h-screen bg-black bg-opacity-30 text-white font-spacer opacity-0"
+        className="relative p-14 z-10 min-h-screen bg-black bg-opacity-30 text-white font-spacer opacity-0"
         ref={contentRef}
       >
         <header className="flex justify-between items-center mb-8">
-          <nav className='flex justify-center items-center '>
+          <nav className='flex justify-center items-center ml-10 '>
             <Link href="/contact" className="hover:text-gray-300">Contact</Link>
           </nav>
           <div className="logo">
