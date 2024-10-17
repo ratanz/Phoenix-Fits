@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useCart } from '@/hooks/useCart';
 import Image from 'next/image';
 import { Product } from '@/app/types';

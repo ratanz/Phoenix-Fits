@@ -115,10 +115,6 @@ export default function ProductPage() {
     }
   }, [product, addToCart, showToast, session])
 
-  const handleBuyNow = useCallback(() => {
-    showToast('Buy Now functionality not implemented yet')
-  }, [showToast])
-
   const swipeHandlers = useSwipeable({
     onSwipedLeft: handleNextImage,
     onSwipedRight: handlePrevImage,
@@ -268,7 +264,6 @@ export default function ProductPage() {
                 </Magnetic>
                 <Magnetic>
                   <button
-                    onClick={handleBuyNow}
                     className="bg-transparent backdrop:blur-sm text-white px-4 py-2 rounded border border-white/50 w-full relative overflow-hidden group"
                   >
                     <span className="absolute inset-0 bg-red-500/80 transform scale-0 transition-transform duration-500 origin-center rounded-full group-hover:scale-100 group-hover:rounded-none"></span>
