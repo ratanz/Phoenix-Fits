@@ -14,6 +14,7 @@ import gsap from 'gsap'
 import Magnetic from '@/components/MagnetAnimation'
 import LoadingAnimation from '@/components/LoadingAnimation'
 import { motion } from 'framer-motion'
+import LiveClockUpdate from '@/components/LiveClockUpdate'
 
 const categories = ['Tshirt', 'Hoodies', 'Jackets', 'Pants', 'Jorts', 'Socks']
 
@@ -148,8 +149,9 @@ export default function CollectionPage() {
         ref={contentRef}
       >
         <header className="flex justify-between items-center mb-8">
-          <nav className='flex justify-center items-center ml-10 '>
-            <Link href="/contact" className="hover:text-gray-300">Contact</Link>
+          <nav className='flex flex-col justify-center items-center p-4 '>
+            {/* <Link href="/contact" className="hover:text-gray-300 text-lg  bg-gradient-to-tr from-blue-500 to-blue-600 bg-clip-text text-transparent ">Contact</Link> */}
+            <LiveClockUpdate />
           </nav>
           <div className="logo">
             <Image src="/images/gorba.png" alt="GORBA" width={115} height={20} className='w-20 h-20' />
@@ -187,14 +189,14 @@ export default function CollectionPage() {
 
         <main className="container mx-auto px-2 py-4">
           <div className="flex">
-            <aside className="w-1/5 px-8 pr-2">
+            <aside className="w-1/5 px-4 pr-2">
               <h2 className="text-xl font-bold mb-4">Categories</h2>
               <ul>
                 {categories.map((category, index) => (
                   <li key={index} className="mb-2">
                     <button
                       onClick={() => setSelectedCategory(category)}
-                      className={` transition-all duration-300 transform hover:translate-x-2 hover:scale-105 ${selectedCategory === category ? 'font-bold text-blue-500' : ''}`}
+                      className={` transition-all duration-300 transform hover:translate-x-2 hover:scale-105 ${selectedCategory === category ? 'font-bold  bg-gradient-to-tr from-blue-500 to-blue-600 bg-clip-text text-transparent ' : ''}`}
                     >
                       {category}
                     </button>
@@ -203,7 +205,7 @@ export default function CollectionPage() {
                 <li className="mb-2">
                   <button
                     onClick={() => setSelectedCategory(null)}
-                    className={`${selectedCategory === null ? 'font-bold text-blue-500 transition-all duration-300 transform hover:translate-x-2 hover:scale-105 ' : ''}`}
+                    className={`${selectedCategory === null ? 'font-bold  bg-gradient-to-tr from-blue-500 to-blue-600 bg-clip-text text-transparent ' : ''}`}
                   >
                     All Products
                   </button>
