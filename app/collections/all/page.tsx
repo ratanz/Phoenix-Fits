@@ -12,7 +12,7 @@ import ToastManager from '@/components/ToastManger'
 import SearchPopup from '@/components/SearchPopup'
 import gsap from 'gsap'
 import Magnetic from '@/components/MagnetAnimation'
-
+import LoadingAnimation from '@/components/LoadingAnimation'
 const categories = ['Tshirt', 'Hoodies', 'Jackets', 'Pants', 'Jorts', 'Socks']
 
 export default function CollectionPage() {
@@ -103,7 +103,9 @@ export default function CollectionPage() {
   };
 
   if (loading) {
-    return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white'>Loading...</div>
+    return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white'>
+      <LoadingAnimation />
+    </div>
   }
 
   return (

@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 import { Checkbox } from '@/components/Checkbox'; 
 import { Product } from '@/app/types';
 import { uploadToS3 } from '@/utils/s3';
-import LoadingAnimation from './LoadingAnimation'
+import ProductAnimation from './ProductAnimation'
 
 const categories = ['Tshirt', 'Hoodies', 'Jackets', 'Pants', 'Jorts', 'Socks']
 const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
@@ -96,7 +96,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
 
   return (
     <div className="flex items-center justify-center lg:w-[80%] w-full ml-[0%] lg:ml-[15%]">
-      {isLoading && <LoadingAnimation />}
+      {isLoading && <ProductAnimation />}
       <form onSubmit={handleSubmit} className="mb-10 w-full lg:w-auto p-4">
         <input
           type="text"

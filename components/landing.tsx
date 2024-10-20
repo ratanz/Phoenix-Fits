@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
+import LoadingAnimation from "./LoadingAnimation"
 
 export default function Landing() {
 
@@ -17,7 +18,9 @@ export default function Landing() {
   }, [])
 
   if (isLoading) {
-    return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white'>Loading...</div>
+    return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white'>
+      <LoadingAnimation />
+    </div>
   }
 
 

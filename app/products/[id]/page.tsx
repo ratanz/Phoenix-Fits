@@ -13,6 +13,7 @@ import { ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import gsap from 'gsap'
 import Magnetic from '@/components/MagnetAnimation'
+import LoadingAnimation from '@/components/LoadingAnimation';
 import { useRouter } from 'next/navigation'
 import loadRazorpay from '@/hooks/razorpay';
 
@@ -132,7 +133,9 @@ export default function ProductPage() {
   })
 
   if (isLoading) {
-    return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white'>Loading...</div>
+    return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white'>
+      <LoadingAnimation />
+    </div>
   }
 
   if (!product) {
