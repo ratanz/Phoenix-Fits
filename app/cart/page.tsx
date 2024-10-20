@@ -11,6 +11,8 @@ import { useCustomToast } from '@/hooks/useCustomToast';
 import { getSession } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import loadRazorpay from '@/hooks/razorpay';
+
 interface CartItem extends Product {
   quantity: number;
 }
@@ -20,20 +22,6 @@ declare global {
     Razorpay: any;
   }
 }
-
-const loadRazorpay = () => {
-  return new Promise((resolve) => {
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.onload = () => {
-      resolve(true);
-    };
-    script.onerror = () => {
-      resolve(false);
-    };
-    document.body.appendChild(script);
-  });
-};
 
 export default function CartPage() {
   const router = useRouter();

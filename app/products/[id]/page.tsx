@@ -14,22 +14,14 @@ import { useSession } from 'next-auth/react'
 import gsap from 'gsap'
 import Magnetic from '@/components/MagnetAnimation'
 import { useRouter } from 'next/navigation'
-import Script from 'next/script';
+import loadRazorpay from '@/hooks/razorpay';
 
-const loadRazorpay = () => {
-  return new Promise((resolve) => {
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.onload = () => {
-      resolve(true);
-    };
-    script.onerror = () => {
-      resolve(false);
-    };
-    document.body.appendChild(script);
-  });
-};
-
+// razorpay global declaration
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 export default function ProductPage() {
   const params = useParams()
