@@ -6,13 +6,30 @@ import { useParams } from 'next/navigation'
 import { useSwipeable } from 'react-swipeable'
 import { useCart } from '@/hooks/useCart'
 import { useCustomToast } from '@/hooks/useCustomToast'
+import ToastManager from '@/components/ToastManger'
 import { Product } from '@/app/types'
 import Link from 'next/link'
 import { ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useSession } from 'next-auth/react'
-import ToastManager from '@/components/ToastManger'
 import gsap from 'gsap'
 import Magnetic from '@/components/MagnetAnimation'
+import { useRouter } from 'next/navigation'
+import Script from 'next/script';
+
+const loadRazorpay = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => {
+      resolve(true);
+    };
+    script.onerror = () => {
+      resolve(false);
+    };
+    document.body.appendChild(script);
+  });
+};
+
 
 export default function ProductPage() {
   const params = useParams()
@@ -26,6 +43,7 @@ export default function ProductPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const productRef = useRef(null)
   const imageRef = useRef(null)
+  const router = useRouter()
 
 
   const fetchProduct = useCallback(async () => {
@@ -130,6 +148,73 @@ export default function ProductPage() {
   }
 
   const allImages = [product.image, ...(product.subImages || [])].map(img => `${process.env.NEXT_PUBLIC_S3_URL}${img}`);
+
+  const handleBuyNow = async () => {
+    if (!session) {
+      showToast('Please sign in to make a purchase', 'error');
+      return;
+    }
+  
+    if (!product) {
+      showToast('Product information is not available', 'error');
+      return;
+    }
+  
+    const amount = product.price - (product.discount || 0);
+    if (isNaN(amount) || amount <= 0) {
+      showToast('Invalid product price', 'error');
+      return;
+    }
+  
+    const res = await loadRazorpay();
+    if (!res) {
+      showToast('Razorpay SDK failed to load. Please try again later.', 'error');
+      return;
+    }
+  
+    try {
+      const response = await fetch('/api/razorpay/create-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to create order');
+      }
+  
+      const data = await response.json();
+  
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: amount * 100,
+        currency: 'INR',
+        name: 'Ratanz store',
+        description: `Purchase of ${product.name}`,
+        order_id: data.orderId,
+        handler: function (response: any) {
+          showToast('Payment successful', 'success');
+          router.push('/payment-success');
+        },
+        prefill: {
+          name: session?.user?.name || '',
+          email: session?.user?.email || '',
+          contact: '',
+        },
+        theme: {
+          color: '#3399cc',
+        },
+      };
+  
+      const paymentObject = new (window as any).Razorpay(options);
+      paymentObject.open();
+    } catch (error) {
+      console.error('Error initiating payment:', error);
+      showToast('Error initiating payment. Please try again.', 'error');
+    }
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -264,6 +349,7 @@ export default function ProductPage() {
                 </Magnetic>
                 <Magnetic>
                   <button
+                    onClick={handleBuyNow}
                     className="bg-transparent backdrop:blur-sm text-white px-4 py-2 rounded border border-white/50 w-full relative overflow-hidden group"
                   >
                     <span className="absolute inset-0 bg-red-500/80 transform scale-0 transition-transform duration-500 origin-center rounded-full group-hover:scale-100 group-hover:rounded-none"></span>
