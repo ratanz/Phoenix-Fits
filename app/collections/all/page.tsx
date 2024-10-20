@@ -13,7 +13,29 @@ import SearchPopup from '@/components/SearchPopup'
 import gsap from 'gsap'
 import Magnetic from '@/components/MagnetAnimation'
 import LoadingAnimation from '@/components/LoadingAnimation'
+import { motion } from 'framer-motion'
+
 const categories = ['Tshirt', 'Hoodies', 'Jackets', 'Pants', 'Jorts', 'Socks']
+
+const container = {
+  hidden: { opacity: 1, scale: 0 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delayChildren: 0.3,
+      staggerChildren: 0.2
+    }
+  }
+}
+
+const item = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1
+  }
+}
 
 export default function CollectionPage() {
   const { data: session } = useSession()
@@ -190,9 +212,14 @@ export default function CollectionPage() {
             </aside>
 
             <div className="w-4/5 px-2">
-              <div className="grid grid-cols-3 gap-10">
+              <motion.div
+                className="grid grid-cols-3 gap-10"
+                variants={container}
+                initial="hidden"
+                animate="visible"
+              >
                 {filteredProducts.map((product) => (
-                  <div key={product._id} className="relative group">
+                  <motion.div key={product._id} variants={item} className="relative group">
                     <Link href={`/products/${product._id}`}>
                       <div className="relative w-full h-96 mb-4 overflow-hidden rounded-lg">
                         <Image
@@ -240,9 +267,9 @@ export default function CollectionPage() {
                         )}
                       </div>
                     </Link>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             </div>
           </div>
         </main>
