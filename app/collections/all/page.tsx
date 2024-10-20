@@ -188,6 +188,7 @@ export default function CollectionPage() {
                 </li>
               </ul>
             </aside>
+
             <div className="w-4/5 px-2">
               <div className="grid grid-cols-3 gap-10">
                 {filteredProducts.map((product) => (
@@ -208,13 +209,14 @@ export default function CollectionPage() {
                                 e.preventDefault()
                                 handleAddToCart(product)
                               }}
-                              className="bg-white/10 text-white py-2 px-4 rounded-md transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-50"
+                              className="bg-white/10 text-white py-2 px-4 rounded-md transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-50 hover:bg-white/20 hover:text-green-500 hover:scale-110 border border-white/40"
                             >
                               Add to Cart
                             </button>
                           </div>
                         </Magnetic>
                       </div>
+
                       <div className="flex flex-col items-center">
                         <h3 className="text-2xl font-medium">{product.name}</h3>
                         <p className="text-sm text-gray-400 mt-1 mb-2">{product.description}</p>
@@ -231,11 +233,6 @@ export default function CollectionPage() {
                             `₹${product.price.toFixed(2)}`
                           )}
                         </p>
-                        {/* {product.status && (
-                        <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-                          {product.status}
-                        </span>
-                      )} */}
                         {product.stock === 'out of stock' && (
                           <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
                             Out of Stock
