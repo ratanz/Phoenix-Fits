@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ToastManager from '@/components/ToastManger';
 import Magnetic from '@/components/MagnetAnimation';
+import { ConfettiFireworks } from '@/components/ui/magicui/confettifireworks';
 
 export default function PaymentSuccess() {
   return (
@@ -21,11 +22,11 @@ export default function PaymentSuccess() {
       </video>
 
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen text-white font-spacer">
-        <div className="  p-8 rounded-lg shadow-md max-w-md w-full">
+        <div className="p-8 rounded-lg shadow-md max-w-md w-full">
           <div className="flex justify-center mb-6">
             <Image src="/images/gorba.png" alt="logo" width={80} height={100} />
           </div>
-          <h1 className="text-3xl font-bold mb-4 text-center">Payment Successful !</h1>
+          <h1 className="text-3xl font-bold mb-4 text-center">Payment Successful!</h1>
           <p className="text-center mb-6">Thank you for your purchase. Your order has been confirmed.</p>
           <div className="flex justify-center">
             <Magnetic>
@@ -41,6 +42,7 @@ export default function PaymentSuccess() {
           </div>
         </div>
       </div>
+      <ConfettiFireworks />
     </div>
   );
 }

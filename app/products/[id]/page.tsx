@@ -133,7 +133,7 @@ export default function ProductPage() {
   })
 
   if (isLoading) {
-    return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white'>
+    return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white bg-black'>
       <LoadingAnimation />
     </div>
   }
@@ -305,7 +305,7 @@ export default function ProductPage() {
             </div>
 
             <div className="w-full md:w-1/3 lg:p-4 p-10 flex flex-col justify-center items-center lg:mt-0 mt-14">
-              <h1 className="text-2xl md:text-3xl font-bold mb-4 text-center">{product.name}</h1>
+              <h1 className="text-2xl md:text-3xl font-bold mb-4 text-center text-white">{product.name}</h1>
               <p className="text-gray-300 mb-4 text-sm md:text-base text-center">{product.description}</p>
               <p className="text-xl md:text-2xl font-bold mb-4">
                 {product.discount && product.discount > 0 ? (
@@ -320,15 +320,15 @@ export default function ProductPage() {
                   `₹${product.price.toFixed(2)}`
                 )}
               </p>
-              <p className="mb-4 text-sm md:text-base">Category: {product.category}</p>
-              <p className="mb-4 text-sm md:text-base">Available Sizes: {product.sizes.join(', ')}</p>
+              <p className="mb-4 text-sm md:text-base text-white">Category: {product.category}</p>
+              <p className="mb-4 text-sm md:text-base text-white">Available Sizes: {product.sizes.join(', ')}</p>
               {/* add select size */}
               <select className="mb-4 bg-transparent border border-white/50 text-white rounded-md p-2  w-fit max-w-xs hover:scale-105 transition-all duration-300 ">
                 {product.sizes.map((size) => (
                   <option className='bg-black/90 ' key={size} value={size}>{size}</option>
                 ))}
               </select>
-              <p className="mb-4 text-sm md:text-base">Stock: {product.stock}</p>
+              <p className="mb-4 text-sm md:text-base text-white">Stock: {product.stock}</p>
 
               <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 lg:mt-0 mt-6 w-full max-w-xs">
                 <Magnetic>

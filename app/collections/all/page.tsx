@@ -126,7 +126,7 @@ export default function CollectionPage() {
   };
 
   if (loading) {
-    return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white'>
+    return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white bg-black'>
       <LoadingAnimation />
     </div>
   }

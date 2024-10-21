@@ -18,7 +18,7 @@ export default function Landing() {
   }, [])
 
   if (isLoading) {
-    return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white'>
+    return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white bg-black'>
       <LoadingAnimation />
     </div>
   }
@@ -39,7 +39,7 @@ export default function Landing() {
     
       <div className="z-10 text-center relative flex flex-col justify-center items-center h-screen">
         <nav className="mb-8">
-          <ul className="space-y-4">
+          <ul className="space-y-4 text-white">
             <li><a href="/collections/all" className="text-2xl hover:text-gray-300 transition-colors">Shop All</a></li>
             <li><a href="/collections/hoodies" className="text-2xl hover:text-gray-300 transition-colors">Hoodies</a></li>
             <li><a href="/collections/t-shirts" className="text-2xl hover:text-gray-300 transition-colors">T-Shirts</a></li>
