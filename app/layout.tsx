@@ -17,7 +17,7 @@ const judas = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "gorbastore",
+  title: "T i m e l e s s",
   description: "Not your average clothing store",
 };
 
