@@ -133,7 +133,7 @@ export default function ProductPage() {
   })
 
   if (isLoading) {
-    return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white bg-black'>
+    return <div className='flex justify-center items-center h-screen text-4xl  font-bold text-white bg-black'>
       <LoadingAnimation />
     </div>
   }
@@ -224,7 +224,7 @@ export default function ProductPage() {
         Your browser does not support the video tag.
       </video>
 
-      <div className="relative z-10 container mx-auto p-4 font-spacer" ref={productRef}>
+      <div className="relative z-10 container mx-auto p-4 font-glorich" ref={productRef}>
 
         <div className="flex p-6 items-center w-full  ">
 

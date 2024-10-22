@@ -12,6 +12,7 @@ import { getSession } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import loadRazorpay from '@/hooks/razorpay';
+import LoadingAnimation from '@/components/LoadingAnimation';
 
 interface CartItem extends Product {
   quantity: number;
@@ -28,7 +29,7 @@ export default function CartPage() {
   const { cart, updateQuantity, removeFromCart } = useCart();
   const { showToast } = useCustomToast()
   const { data: session } = useSession();
-  console.log('Cart contents in CartPage:', cart);
+  const [isLoading, setIsLoading] = useState(true)
 
   const total = cart.reduce((sum, item) => {
     const itemPrice = item.discount && item.discount > 0 ? item.price - item.discount : item.price;
@@ -122,7 +123,7 @@ export default function CartPage() {
         <source src="/video/starseffect.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-    <div className="relative z-50 px-24 p-10 text-white font-spacer ">
+    <div className="relative z-50 px-24 p-10 text-white font-glorich ">
       <div className="logo flex items-center justify-center">
         <Link href="/collections/all">
           <Image src="/images/gorba.png" alt="logo" width={70} height={70} />
@@ -199,3 +200,4 @@ export default function CartPage() {
     </div>
   );
 }
+

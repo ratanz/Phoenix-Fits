@@ -55,7 +55,6 @@ export default function CollectionPage() {
 
   useEffect(() => {
     async function fetchProducts() {
-      if (!loading) return;
       try {
         const response = await fetch('/api/products')
         if (response.ok) {
@@ -73,7 +72,7 @@ export default function CollectionPage() {
       }
     }
     fetchProducts()
-  }, [showToast, loading])
+  }, [showToast])
 
   useEffect(() => {
     if (!loading && contentRef.current) {
@@ -126,9 +125,7 @@ export default function CollectionPage() {
   };
 
   if (loading) {
-    return <div className='flex justify-center items-center h-screen text-4xl font-judas font-bold text-white bg-black'>
-      <LoadingAnimation />
-    </div>
+    return <LoadingAnimation />;
   }
 
   return (
@@ -145,7 +142,7 @@ export default function CollectionPage() {
         Your browser does not support the video tag.
       </video>
       <div
-        className="relative p-14 z-10 min-h-screen bg-black bg-opacity-30 text-white font-spacer opacity-0"
+        className="relative p-14 z-10 min-h-screen bg-black bg-opacity-30 text-white font-glorich"
         ref={contentRef}
       >
         <header className="flex justify-between items-center mb-8">

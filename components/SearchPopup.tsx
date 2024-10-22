@@ -21,8 +21,8 @@ const SearchPopup: React.FC<SearchPopupProps> = ({ isOpen, onClose, onSearch }) 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-spacer">
-      <div className="bg-transparent backdrop-blur-md shadow-xl p-10 rounded-lg w-[30vw] border border-zinc-100/20">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-transparent backdrop-blur-md shadow-xl p-10 rounded-lg w-[30vw] border border-zinc-100/20 font-glorich">
         <form onSubmit={handleSubmit}>
           <input
             type="text"

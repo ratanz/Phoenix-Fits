@@ -53,7 +53,7 @@ const config: Config = {
   		},
   		fontFamily: {
   			spacer: 'var(--font-spacer)',
-  			judas: 'var(--font-judas)'
+  			glorich: 'var(--font-glorich)'
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

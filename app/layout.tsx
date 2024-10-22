@@ -11,9 +11,9 @@ const spacer = localFont({
   variable: "--font-spacer",
 });
 
-const judas = localFont({
-  src: "./fonts/judasc__.otf",
-  variable: "--font-judas",
+const glorich = localFont({
+  src: "./fonts/Glorich-Bold.otf",
+  variable: "--font-glorich",
 });
 
 export const metadata: Metadata = {
@@ -28,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${spacer.variable} ${judas.variable} antialiased`}>
+      <body className={`${spacer.variable} ${glorich.variable} antialiased`}>
         <Providers>
           {children}
         </Providers>
