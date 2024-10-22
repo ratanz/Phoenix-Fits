@@ -55,6 +55,7 @@ export default function CollectionPage() {
 
   useEffect(() => {
     async function fetchProducts() {
+      if (!loading) return;
       try {
         const response = await fetch('/api/products')
         if (response.ok) {
@@ -72,7 +73,7 @@ export default function CollectionPage() {
       }
     }
     fetchProducts()
-  }, [showToast])
+  }, [showToast, loading])
 
   useEffect(() => {
     if (!loading && contentRef.current) {
@@ -142,12 +143,12 @@ export default function CollectionPage() {
         Your browser does not support the video tag.
       </video>
       <div
-        className="relative p-14 z-10 min-h-screen bg-black bg-opacity-30 text-white font-glorich"
+        className="relative p-10 z-10 min-h-screen bg-black bg-opacity-30 text-white font-glorich"
         ref={contentRef}
       >
-        <header className="flex justify-between items-center mb-8">
-          <nav className='flex flex-col justify-center items-center p-4 '>
-            {/* <Link href="/contact" className="hover:text-gray-300 text-lg  bg-gradient-to-tr from-blue-500 to-blue-600 bg-clip-text text-transparent ">Contact</Link> */}
+        <header className="flex justify-between items-center mb-8 px-4">
+          <nav className='  '>
+            <Link href="/contact" className="hover:text-gray-300 text-lg  bg-gradient-to-tr from-blue-500 to-blue-300 bg-clip-text text-transparent ">Contact</Link>
             <LiveClockUpdate />
           </nav>
           <div className="logo">
@@ -161,7 +162,7 @@ export default function CollectionPage() {
                 <div className="relative cursor-pointer">
                   <ShoppingCart className="h-6 w-6 text-white hover:text-blue-400 transition-all duration-150" />
                   {cart.length > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full h-5 w-5 flex items-center justify-center text-xs">
+                    <span className="absolute -top-2 -right-2 bg-gradient-to-tr from-red-500 to-zinc-900 text-white rounded-full h-5 w-5 flex items-center justify-center text-xs">
                       {cart.length}
                     </span>
                   )}
@@ -193,7 +194,7 @@ export default function CollectionPage() {
                   <li key={index} className="mb-2">
                     <button
                       onClick={() => setSelectedCategory(category)}
-                      className={` transition-all duration-300 transform hover:translate-x-2 hover:scale-105 ${selectedCategory === category ? 'font-bold  bg-gradient-to-tr from-blue-500 to-blue-600 bg-clip-text text-transparent ' : ''}`}
+                      className={` transition-all duration-300 transform hover:translate-x-2 hover:scale-105 ${selectedCategory === category ? 'font-bold  bg-gradient-to-tr from-blue-500 to-blue-300 bg-clip-text text-transparent ' : ''}`}
                     >
                       {category}
                     </button>
@@ -202,7 +203,7 @@ export default function CollectionPage() {
                 <li className="mb-2">
                   <button
                     onClick={() => setSelectedCategory(null)}
-                    className={`${selectedCategory === null ? 'font-bold  bg-gradient-to-tr from-blue-500 to-blue-600 bg-clip-text text-transparent ' : ''}`}
+                    className={`${selectedCategory === null ? 'font-bold  bg-gradient-to-tr from-blue-500 to-blue-300 bg-clip-text text-transparent ' : ''}`}
                   >
                     All Products
                   </button>
@@ -235,7 +236,7 @@ export default function CollectionPage() {
                                 e.preventDefault()
                                 handleAddToCart(product)
                               }}
-                              className="bg-white/10 text-white py-2 px-4 rounded-md transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-50 hover:bg-white/20 hover:text-green-500 hover:scale-110 border border-white/40"
+                              className="bg-white/10 text-white py-1 px-2 rounded-lg transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-50 hover:bg-white/20 hover:bg-gradient-to-tr from-green-500/90  to-zinc-900  hover:scale-110 border border-white/40"
                             >
                               Add to Cart
                             </button>
@@ -260,7 +261,7 @@ export default function CollectionPage() {
                           )}
                         </p>
                         {product.stock === 'out of stock' && (
-                          <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
+                          <span className="absolute top-2 right-2 bg-gradient-to-b from-red-500 to-zinc-900 text-white text-xs px-2 py-1 rounded">
                             Out of Stock
                           </span>
                         )}

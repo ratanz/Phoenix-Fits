@@ -244,7 +244,7 @@ export default function ProductPage() {
               <div className="relative cursor-pointer ml-10">
                 <ShoppingCart className="h-6 w-6 text-white transition-all duration-300" />
                 {cart.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full h-4 w-4 flex items-center justify-center text-xs">
+                  <span className="absolute -top-2 -right-2 bg-gradient-to-tr from-red-500 to-zinc-900 text-white rounded-full h-4 w-4 flex items-center justify-center text-xs">
                     {cart.length}
                   </span>
                 )}
@@ -336,7 +336,7 @@ export default function ProductPage() {
                     onClick={handleAddToCart}
                     className="bg-transparent backdrop:blur-sm text-white px-4 py-2 rounded border border-white/50 w-full relative overflow-hidden group"
                   >
-                    <span className="absolute inset-0 bg-blue-500/80 transform scale-0 transition-transform duration-500 origin-center rounded-full group-hover:scale-100 group-hover:rounded-none"></span>
+                    <span className="absolute inset-0 bg-gradient-to-b from-blue-500 to-zinc-900 transform scale-0 transition-transform duration-500 origin-center rounded-full group-hover:scale-100 group-hover:rounded-none"></span>
                     <span className="relative z-10 transition-colors duration-500 group-hover:text-white">
                       Add to Cart
                     </span>
@@ -347,7 +347,7 @@ export default function ProductPage() {
                     onClick={handleBuyNow}
                     className="bg-transparent backdrop:blur-sm text-white px-4 py-2 rounded border border-white/50 w-full relative overflow-hidden group"
                   >
-                    <span className="absolute inset-0 bg-red-500/80 transform scale-0 transition-transform duration-500 origin-center rounded-full group-hover:scale-100 group-hover:rounded-none"></span>
+                    <span className="absolute inset-0 bg-gradient-to-b from-red-500 to-zinc-900 transform scale-0 transition-transform duration-500 origin-center rounded-full group-hover:scale-100 group-hover:rounded-none"></span>
                     <span className="relative z-10 transition-colors duration-500 group-hover:text-white">
                       Buy Now
                     </span>
