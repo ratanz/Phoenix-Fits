@@ -14,7 +14,6 @@ import Link from 'next/link';
 import loadRazorpay from '@/hooks/razorpay';
 import gsap from 'gsap';
 
-
 interface CartItem extends Product {
   quantity: number;
 }
@@ -182,7 +181,7 @@ export default function CartPage() {
               </p>
               <button
                 onClick={() => removeFromCart(item._id)}
-                className="bg-red-500 text-white px-4 py-2 rounded-xl hover:scale-105 transition-all duration-300"
+                className="bg-gradient-to-tr from-red-500/90  to-zinc-900  text-white px-4 py-2 rounded-xl hover:scale-105 transition-all duration-300"
               >
                 Remove
               </button>
@@ -194,11 +193,10 @@ export default function CartPage() {
               </button>
             </div>
           ))}
-
-          <div className="mt-8 flex flex-col items-center justify-center">
+          <div className="mt-8 flex flex-col items-center justify-center p-4">
             <p className="text-2xl font-bold">Subtotal: ₹{total.toFixed(2)}</p>
-            <button 
-              className="bg-transparent border border-zinc-600/50 text-white p-2 px-4 rounded-xl mr-2" 
+            <button
+              className="bg-transparent border border-zinc-600/50 text-white mt-2 p-2 px-4 rounded-xl mr-2 hover:scale-105 transition-all duration-300 hover:bg-gradient-to-tr from-green-500/90  to-zinc-900 " 
               onClick={() => handlePayment()}
             >
               Checkout with Razorpay
