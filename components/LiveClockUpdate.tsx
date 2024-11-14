@@ -6,12 +6,12 @@ interface LiveClockUpdateState {
 }
 
 // Define the LiveClockUpdate class component
-class LiveClockUpdate extends Component<{}, LiveClockUpdateState> {
+class LiveClockUpdate extends Component<Record<string, never>, LiveClockUpdateState> {
   // Declare a private property to store the timer ID
   private timerID: NodeJS.Timeout | null = null;
 
   // Constructor to initialize the component
-  constructor(props: {}) {
+  constructor(props: Record<string, never>) {
     super(props);
 
     // Initialize the state with the current date

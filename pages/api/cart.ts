@@ -11,6 +11,16 @@ interface CartItem {
   quantity: number;
 }
 
+interface PopulatedCartItem extends Omit<CartItem, 'product'> {
+  product: {
+    _id: string;
+    name: string;
+    price: number;
+    discount?: number;
+    image: string;
+  };
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log('Cart API called, method:', req.method);
   const session = await getServerSession(req, res, authOptions);
@@ -32,12 +42,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log('Cart found:', cart);
         if (cart && cart.items) {
           const cartItems = cart.items
-            .filter((item: CartItem) => item.product && typeof item.product === 'object')
-            .map((item: CartItem & { product: any }) => ({
+            .filter((item: PopulatedCartItem) => item.product && typeof item.product === 'object')
+            .map((item: PopulatedCartItem) => ({
               _id: item.product._id,
               name: item.product.name,
               price: item.product.price,
-              discount : item.product.discount,
+              discount: item.product.discount,
               image: item.product.image,
               quantity: item.quantity,
             }));
@@ -79,32 +89,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       break;
 
-      case 'PUT':
-        try {
-          console.log('Request body:', req.body);
-          const { productId, quantity } = req.body;
-          const cart = await Cart.findOne({ userId });
-          if (!cart) {
-            return res.status(404).json({ error: 'Cart not found' });
-          }
-          const itemIndex = cart.items.findIndex((item: CartItem) => item.product && item.product.toString() === productId);
-          if (itemIndex > -1) {
-            if (quantity > 0) {
-              cart.items[itemIndex].quantity = quantity;
-            } else {
-              cart.items.splice(itemIndex, 1);
-            }
-            await cart.save();
-            console.log('Updated cart:', cart);
-            res.status(200).json({ success: true, message: 'Cart updated', cart });
-          } else {
-            res.status(404).json({ success: false, error: 'Item not found in cart' });
-          }
-        } catch (error) {
-          console.error('Error updating cart:', error);
-          res.status(500).json({ success: false, error: 'Failed to update cart', details: (error as Error).message });
+    case 'PUT':
+      try {
+        console.log('Request body:', req.body);
+        const { productId, quantity } = req.body;
+        const cart = await Cart.findOne({ userId });
+        if (!cart) {
+          return res.status(404).json({ error: 'Cart not found' });
         }
-        break;
+        const itemIndex = cart.items.findIndex((item: CartItem) => item.product && item.product.toString() === productId);
+        if (itemIndex > -1) {
+          if (quantity > 0) {
+            cart.items[itemIndex].quantity = quantity;
+          } else {
+            cart.items.splice(itemIndex, 1);
+          }
+          await cart.save();
+          console.log('Updated cart:', cart);
+          res.status(200).json({ success: true, message: 'Cart updated', cart });
+        } else {
+          res.status(404).json({ success: false, error: 'Item not found in cart' });
+        }
+      } catch (error) {
+        console.error('Error updating cart:', error);
+        res.status(500).json({ success: false, error: 'Failed to update cart', details: (error as Error).message });
+      }
+      break;
 
     case 'DELETE':
       try {

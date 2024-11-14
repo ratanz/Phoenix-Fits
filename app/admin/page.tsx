@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import AdminProductForm from '@/components/AdminProductForm'
 import AdminProductList from '@/components/AdminProductList'
 import ToastManager from '@/components/ToastManger'
@@ -11,17 +11,18 @@ export default function AdminPage() {
   const [products, setProducts] = useState([])
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const { showToast } = useCustomToast()
-  useEffect(() => {
-    checkAuth()
-  }, [])
 
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     const response = await fetch('/api/admin/check-auth')
     if (response.ok) {
       setIsAuthenticated(true)
       fetchProducts()
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    checkAuth()
+  }, [checkAuth])
 
   const fetchProducts = async () => {
     const response = await fetch('/api/products')
@@ -39,10 +40,12 @@ export default function AdminPage() {
     if (response.ok) {
       setIsAuthenticated(true)
       fetchProducts()
+      showToast('Login successful', 'success')
     } else {
-      alert('Invalid credentials')
+      showToast('Invalid credentials', 'error')
     }
   }
+
   if (!isAuthenticated) {
     return <AdminLoginPopup onLogin={handleLogin} />
   }

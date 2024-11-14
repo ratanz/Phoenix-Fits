@@ -28,7 +28,7 @@ export default function SignUp() {
         const error = await res.text()
         showToast(error)
       }
-    } catch (error) {
+    } catch {
       showToast('An error occurred during sign up')
     }
   }

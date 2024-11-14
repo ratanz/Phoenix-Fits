@@ -1,49 +1,57 @@
+// Mark this component as a client-side component
 'use client'
 
+// Import necessary dependencies and components
 import { useCustomToast } from '@/hooks/useCustomToast'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import { Checkbox } from '@/components/Checkbox'; 
-import { Product } from '@/app/types';
-import { uploadToS3 } from '@/utils/s3';
+import { Checkbox } from '@/components/Checkbox'
+import { Product } from '@/app/types'
 import ProductAnimation from './ProductAnimation'
 
+// Define available product categories and sizes
 const categories = ['Tshirt', 'Hoodies', 'Jackets', 'Pants', 'Jorts', 'Socks']
 const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
 
+// Define props interface for the component
 interface AdminProductFormProps {
-  onProductAdded: () => void
+  onProductAdded: () => void // Callback function to be called when a product is successfully added
 }
 
 export default function AdminProductForm({ onProductAdded }: AdminProductFormProps) {
+  // State management for form fields using useState hooks
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
   const [discount, setDiscount] = useState('')
   const [image, setImage] = useState<File | null>(null)
-  const [subImages, setSubImages] = useState<File[]>([]);
+  const [subImages, setSubImages] = useState<File[]>([])
   const [category, setCategory] = useState('')
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([])
   const [stock, setStock] = useState<Product['stock']>('in stock')
-  const {showToast} = useCustomToast()
+  const {showToast} = useCustomToast() // Custom hook for showing toast notifications
   const [isLoading, setIsLoading] = useState(false)
 
+  // Handler for toggling size selection
   const handleSizeChange = (size: string) => {
     setSelectedSizes(prev => 
       prev.includes(size) ? prev.filter(s => s !== size) : [...prev, size]
     );
   };
 
+  // Handler for multiple sub-images selection
   const handleSubImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setSubImages(Array.from(e.target.files))
     }
   }
 
+  // Form submission handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     try {
+      // Create FormData object to send files and data
       const formData = new FormData()
       formData.append('name', name)
       formData.append('description', description)
@@ -53,14 +61,17 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
       formData.append('sizes', JSON.stringify(selectedSizes))
       formData.append('stock', stock)
 
+      // Append main image if selected
       if (image) {
         formData.append('image', image)
       }
 
+      // Append all sub-images
       subImages.forEach((subImage) => {
         formData.append('subImages', subImage)
       })
 
+      // Send POST request to API
       const response = await fetch('/api/products', {
         method: 'POST',
         body: formData,
@@ -71,7 +82,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
         console.log('Product added:', data)
         toast.success('Product added successfully')
         onProductAdded()
-        // Reset form
+        // Reset all form fields after successful submission
         setName('')
         setDescription('')
         setPrice('')
@@ -82,11 +93,13 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
         setSelectedSizes([])
         setStock('in stock')
       } else {
+        // Handle error response
         const errorData = await response.json()
         console.error('Failed to add product:', errorData)
         showToast(`Failed to add product: ${errorData.error}`)
       }
     } catch (error) {
+      // Handle any unexpected errors
       console.error('Error adding product:', error)
       showToast(`An error occurred while adding the product: ${(error as Error).message}`)
     } finally {
@@ -94,10 +107,15 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
     }
   }
 
+  // Render the form UI
   return (
     <div className="flex items-center justify-center lg:w-[80%] w-full ml-[0%] lg:ml-[15%]">
+      {/* Show loading animation when form is submitting */}
       {isLoading && <ProductAnimation />}
+      
+      {/* Product form with responsive styling */}
       <form onSubmit={handleSubmit} className="mb-10 w-full lg:w-auto p-4">
+        {/* Product name input */}
         <input
           type="text"
           value={name}
@@ -107,6 +125,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           className="mb-4 p-2 w-full lg:w-[80%] backdrop-blur-2xl bg-transparent border border-zinc-600 text-white rounded-md hover:scale-105 transition-all duration-300"
         />
 
+        {/* Product description textarea */}
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -115,6 +134,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           className="p-2 mb-2 h-16 w-full lg:w-[80%] backdrop-blur-sm bg-transparent border border-zinc-600 text-white rounded-md hover:scale-105 transition-all duration-300"
         />
 
+        {/* Price input */}
         <input
           type="number"
           value={price}
@@ -124,6 +144,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           className="mb-4 p-2 w-full lg:w-[80%] backdrop-blur-sm bg-transparent border border-zinc-600 text-zinc-100 rounded-md hover:scale-105 transition-all duration-300"
         />
 
+        {/* Discount input */}
         <input
           type="number"
           value={discount}
@@ -132,6 +153,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           className="mb-4 p-2 w-full lg:w-6/12 backdrop-blur-sm bg-transparent border border-zinc-600 text-zinc-100 rounded-md hover:scale-105 transition-all duration-300"
         />
 
+        {/* Category selection dropdown */}
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
@@ -144,6 +166,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           ))}
         </select>
 
+        {/* Stock status selection */}
         <select
           value={stock}
           onChange={(e) => setStock(e.target.value as Product['stock'])}
@@ -154,6 +177,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           <option className='bg-zinc-800 text-zinc-100' value="out of stock">Out of Stock</option>
         </select>
 
+        {/* Main product image upload */}
         <div className="px-0 lg:px-0 gap-6 w-full lg:w-full p-4">
           <input
             type="file"
@@ -163,6 +187,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           />
         </div>
 
+        {/* Sub-images upload section */}
         <div className="mb-4">
           <p className="text-white mb-2">Sub Images (up to 10):</p>
           <input
@@ -175,6 +200,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           />
         </div>
 
+        {/* Size selection checkboxes */}
         <div className="mb-4">
           <p className="text-white mb-2">Available Sizes:</p>
           <div className="flex flex-wrap gap-4 ">
@@ -189,6 +215,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           </div>
         </div>
 
+        {/* Submit button */}
         <button type="submit" className="w-full lg:w-[80%] bg-transparent border border-zinc-600/90 text-white p-2 rounded-md mt-4 lg:mt-10 hover:scale-105 transition-all duration-300 hover:bg-zinc-200/90 hover:text-black">
             Add Product
           </button>

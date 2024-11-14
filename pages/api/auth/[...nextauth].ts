@@ -1,4 +1,4 @@
-import NextAuth, { DefaultSession } from 'next-auth'
+import NextAuth, { DefaultSession, User, NextAuthOptions, Session } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { MongoDBAdapter } from '@auth/mongodb-adapter'
@@ -14,7 +14,7 @@ declare module "next-auth" {
   }
 }
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -26,25 +26,33 @@ export const authOptions = {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials) {
+      async authorize(credentials): Promise<User | null> {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
         const client = await clientPromise
         const usersCollection = client.db().collection('users')
         
-        const user = await usersCollection.findOne({ email: credentials?.email })
-        if (user && bcrypt.compareSync(credentials?.password || '', user.password)) {
-          return { id: user._id.toString(), name: user.name, email: user.email }
+        const user = await usersCollection.findOne({ email: credentials.email })
+        if (user && bcrypt.compareSync(credentials.password, user.password)) {
+          return { 
+            id: user._id.toString(),
+            name: user.name,
+            email: user.email
+          };
         }
-        throw new Error('Invalid email or password')
+        return null;
       }
     }),
   ],
   adapter: MongoDBAdapter(clientPromise),
   callbacks: {
-    async session({ session, user }: { session: any; user: any }) {
+    async session({ session, user }: { session: Session; user: User }): Promise<Session> {
       if (session.user) {
-        session.user.id = user.id
+        session.user.id = user.id;
       }
-      return session
+      return session;
     },
   },
   pages: {

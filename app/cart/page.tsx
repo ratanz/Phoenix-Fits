@@ -1,26 +1,25 @@
 'use client'
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef,  useEffect } from 'react';
 import { useCart } from '@/hooks/useCart';
 import Image from 'next/image';
-import { Product } from '@/app/types';
 import ToastManager from '@/components/ToastManger';
-import Script from 'next/script';
 import { useRouter } from 'next/navigation';
 import { useCustomToast } from '@/hooks/useCustomToast';
-import { getSession } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import loadRazorpay from '@/hooks/razorpay';
 import gsap from 'gsap';
+import { RazorpayOptions, RazorpayInstance } from '@/app/types';
 
-interface CartItem extends Product {
-  quantity: number;
-}
+
+// interface CartItem extends Product {
+//   quantity: number;
+// }
 
 declare global {
   interface Window {
-    Razorpay: any;
+    Razorpay: new (options: RazorpayOptions) => RazorpayInstance;
   }
 }
 
@@ -82,14 +81,14 @@ export default function CartPage() {
 
       const data = await response.json();
 
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      const options: RazorpayOptions = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '',
         amount: amount * 100,
         currency: 'INR',
         name: 'Ratanz store',
         description: description,
         order_id: data.orderId,
-        handler: function (response: any) {
+        handler: function () {
           showToast('Payment successful', 'success');
           router.push('/payment-success');
         },
@@ -103,7 +102,7 @@ export default function CartPage() {
         },
       };
 
-      const paymentObject = new (window as any).Razorpay(options);
+      const paymentObject = new window.Razorpay(options);
       paymentObject.open();
     } catch (error) {
       console.error('Error initiating payment:', error);
@@ -132,7 +131,9 @@ export default function CartPage() {
         <source src="/video/starseffect.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
+
     <div ref={contentRef} className="relative z-50 px-24 p-10 text-white font-glorich ">
+    
       <div className="logo flex items-center justify-center">
         <Link href="/collections/all">
           <Image src="/images/gorba.png" alt="logo" width={70} height={70} />
@@ -176,6 +177,7 @@ export default function CartPage() {
                   </button>
                 </div>
               </div>
+
               <p className="text-xl font-semibold mr-4">
                 ₹{((item.discount && item.discount > 0 ? item.price - item.discount : item.price) * item.quantity).toFixed(2)}
               </p>
@@ -193,6 +195,7 @@ export default function CartPage() {
               </button>
             </div>
           ))}
+          
           <div className="mt-8 flex flex-col items-center justify-center p-4">
             <p className="text-2xl font-bold">Subtotal: ₹{total.toFixed(2)}</p>
             <button
@@ -208,4 +211,3 @@ export default function CartPage() {
     </div>
   );
 }
-

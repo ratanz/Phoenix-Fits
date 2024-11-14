@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // Send successful response with the order ID
       res.status(200).json({ orderId: order.id });
-    } catch (error) {
+    } catch  {
       // Send error response
       res.status(500).json({ error: 'Error creating order' });
     }

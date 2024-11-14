@@ -42,7 +42,7 @@ export default async function handler(req, res) {
           return res.status(404).json({ success: false, error: 'Product not found' })
         }
         res.status(200).json(product)
-      } catch (error) {
+      } catch {
         res.status(400).json({ success: false, error: 'Error fetching product' })
       }
       break

@@ -4,7 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import dynamic from 'next/dynamic';
 
-const ToastManager = dynamic(() => import('@/components/ToastManger'), { ssr: false });
+ dynamic(() => import('@/components/ToastManger'), { ssr: false });
 
 const spacer = localFont({
   src: "./fonts/Spacer36.otf",
@@ -17,7 +17,7 @@ const glorich = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "T i m e l e s s",
+  title: "Phoenix Fits",
   description: "Not your average clothing store",
 };
 

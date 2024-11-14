@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import EditProductForm from './EditProductForm'
 import { useCustomToast } from '@/hooks/useCustomToast'
 import { Product } from '@/app/types'
-import { deleteFromS3 } from '@/utils/s3';
+import Image from 'next/image'
 
 interface AdminProductListProps {
   products: Product[]
@@ -86,9 +86,11 @@ export default function AdminProductList({ products, onProductUpdated, onProduct
                   Discounted Price: ₹{(product.price - product.discount).toFixed(2)}
                 </p>
               )}
-              <img
+              <Image
                 src={getFullImageUrl(product.image)}
                 alt={product.name}
+               width={350}
+               height={300}
                 className="w-fit h-fit object-cover mt-2 rounded-xl"
                 onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }}
               />

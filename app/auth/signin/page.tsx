@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { useCustomToast } from '@/hooks/useCustomToast'
+
 export default function SignIn() {
   const [isSignUp, setIsSignUp] = useState(false)
   const [name, setName] = useState('')
@@ -30,7 +30,7 @@ export default function SignIn() {
           const error = await res.text()
           showToast(error)
         }
-      } catch (error) {
+      } catch  {
         showToast('An error occurred during sign up')
       }
     } else {
@@ -46,7 +46,7 @@ export default function SignIn() {
           showToast('Logged in successfully')
           router.push('/collections/all')
         }
-      } catch (error) {
+      } catch  {
         showToast('An error occurred during login')
       }
     }
@@ -84,12 +84,16 @@ export default function SignIn() {
             {isSignUp ? 'Sign Up' : 'Sign In'}
           </button>
         </form>
+
+        {/* Google sign in button */}
         <button
           onClick={() => signIn('google', { callbackUrl: '/collections/all' })}
           className="w-full bg-red-500 text-white p-2 rounded mb-4"
         >
           {isSignUp ? 'Sign Up' : 'Sign In'} with Google
         </button>
+        
+        {/* Toggle sign up/in button */}
         <p className="text-center">
           {isSignUp ? 'Already have an account?' : "Don't have an account?"}
           <button onClick={() => setIsSignUp(!isSignUp)} className="text-blue-400 ml-2">

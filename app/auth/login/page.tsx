@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useCustomToast } from '@/hooks/useCustomToast'
 
 export default function Login() {
+  // State management for email and password
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
@@ -26,7 +27,7 @@ export default function Login() {
         showToast('Logged in successfully')
         router.push('/collections/all')
       }
-    } catch (error) {
+    } catch  {
       showToast('An error occurred during login')
     }
   }
@@ -78,7 +79,7 @@ export default function Login() {
             Log In with Google
           </button>
           <p className="text-center">
-            Don't have an account? <Link href="/auth/signup" className="text-blue-400">Sign Up</Link>
+            Don&apos;t have an account? <Link href="/auth/signup" className="text-blue-400">Sign Up</Link>
           </p>
         </div>
       </div>

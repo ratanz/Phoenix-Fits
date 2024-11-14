@@ -16,11 +16,12 @@ import Magnetic from '@/components/MagnetAnimation'
 import LoadingAnimation from '@/components/LoadingAnimation';
 import { useRouter } from 'next/navigation'
 import loadRazorpay from '@/hooks/razorpay';
+import { RazorpayInstance, RazorpayOptions } from '@/app/types';
 
 // razorpay global declaration
 declare global {
   interface Window {
-    Razorpay: any;
+    Razorpay: new (options: RazorpayOptions) => RazorpayInstance;
   }
 }
 
@@ -182,14 +183,19 @@ export default function ProductPage() {
   
       const data = await response.json();
   
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      const razorpayKeyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+      if (!razorpayKeyId) {
+        throw new Error('Razorpay key is not defined');
+      }
+  
+      const options: RazorpayOptions = {
+        key: razorpayKeyId,
         amount: amount * 100,
         currency: 'INR',
         name: 'Ratanz store',
         description: `Purchase of ${product.name}`,
         order_id: data.orderId,
-        handler: function (response: any) {
+        handler: function () {
           showToast('Payment successful', 'success');
           router.push('/payment-success');
         },
@@ -203,7 +209,7 @@ export default function ProductPage() {
         },
       };
   
-      const paymentObject = new (window as any).Razorpay(options);
+      const paymentObject = new window.Razorpay(options);
       paymentObject.open();
     } catch (error) {
       console.error('Error initiating payment:', error);

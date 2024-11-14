@@ -46,41 +46,45 @@ export default function CollectionPage() {
   const contentRef = useRef(null)
 
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [searchResults, setSearchResults] = useState<Product[]>([])
+  // const [searchResults, setSearchResults] = useState<Product[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-
-  console.log('Current session:', session);
 
   const [loading, setLoading] = useState(true);
 
+  // Fetch products from API when component mounts
   useEffect(() => {
     async function fetchProducts() {
+      // Skip if products are already loaded
       if (!loading) return;
+      
       try {
+        // Make API call to get products
         const response = await fetch('/api/products')
         if (response.ok) {
           const data = await response.json()
-          console.log('Fetched products:', data)
           setProducts(data as Product[])
         } else {
           showToast('Failed to fetch products')
         }
-      } catch (error) {
-        console.error('Error fetching products:', error)
+      } catch {
         showToast('An error occurred while fetching products')
       } finally {
+        // Set loading to false after fetch completes
         setLoading(false);
       }
     }
     fetchProducts()
   }, [showToast, loading])
 
+  // Animate content fade in after products load
   useEffect(() => {
+    // Only animate if products are loaded and content ref exists
     if (!loading && contentRef.current) {
+      // Use GSAP to animate content sliding up and fading in
       gsap.fromTo(
         contentRef.current,
-        { opacity: 0, y: 90 },
-        { opacity: 1, y: 0, duration: 1.1, ease: 'power3.out' }
+        { opacity: 0, y: 90 }, // Start state
+        { opacity: 1, y: 0, duration: 1.1, ease: 'power3.out' } // End state
       )
     }
   }, [loading])
@@ -142,12 +146,13 @@ export default function CollectionPage() {
         <source src="/video/starseffect.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
+     
       <div
         className="relative p-10 z-10 min-h-screen bg-black bg-opacity-30 text-white font-glorich"
         ref={contentRef}
       >
         <header className="flex justify-between items-center mb-8 px-4">
-          <nav className='  '>
+          <nav className=''>
             <Link href="/contact" className="hover:text-gray-300 text-lg  bg-gradient-to-tr from-blue-500 to-blue-300 bg-clip-text text-transparent ">Contact</Link>
             <LiveClockUpdate />
           </nav>
@@ -183,7 +188,6 @@ export default function CollectionPage() {
             )}
           </div>
         </header>
-
 
         <main className="container mx-auto px-2 py-4">
           <div className="flex">
@@ -273,7 +277,8 @@ export default function CollectionPage() {
             </div>
           </div>
         </main>
+
       </div>
     </div>
   )
-}
+} 
