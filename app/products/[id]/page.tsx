@@ -230,7 +230,7 @@ export default function ProductPage() {
         Your browser does not support the video tag.
       </video>
 
-      <div className="relative z-10 container mx-auto p-4 font-glorich" ref={productRef}>
+      <div className="relative z-10 container mx-auto p-2 md:p-4 font-glorich" ref={productRef}>
 
         <div className="flex p-6 items-center w-full  ">
 
@@ -294,7 +294,7 @@ export default function ProductPage() {
                 {allImages.map((image, index) => (
                   <div
                     key={index}
-                    className={`w-36 h-36 relative cursor-pointer  ${currentImageIndex === index ? 'border border-white/50 rounded-md' : ''
+                    className={`md:w-36 md:h-36 w-28 h-28 relative cursor-pointer  ${currentImageIndex === index ? 'border border-white/50 rounded-md' : ''
                       }`}
                     onClick={() => handleThumbnailClick(index)}
                   >

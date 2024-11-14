@@ -148,11 +148,11 @@ export default function CollectionPage() {
       </video>
      
       <div
-        className="relative p-10 z-10 min-h-screen bg-black bg-opacity-30 text-white font-glorich"
+        className="relative p-4 md:p-10 z-10 min-h-screen bg-black bg-opacity-30 text-white font-glorich"
         ref={contentRef}
       >
         <header className="flex justify-between items-center mb-8 px-4">
-          <nav className=''>
+          <nav className='hidden md:flex'>
             <Link href="/contact" className="hover:text-gray-300 text-lg  bg-gradient-to-tr from-blue-500 to-blue-300 bg-clip-text text-transparent ">Contact</Link>
             <LiveClockUpdate />
           </nav>
@@ -160,7 +160,7 @@ export default function CollectionPage() {
             <Image src="/images/gorba.png" alt="GORBA" width={115} height={20} className='w-20 h-20' />
           </div>
 
-          <div className="flex items-center justify-end w-fit ">
+          <div className="flex items-center justify-end sm:justify-end w-full sm:w-fit gap-4">
             <Search className="w-6 h-6 mr-4 cursor-pointer hover:text-gray-300" onClick={handleSearchOpen} />
             <div className="flex justify-end mr-4">
               <Link href="/cart">
@@ -190,15 +190,19 @@ export default function CollectionPage() {
         </header>
 
         <main className="container mx-auto px-2 py-4">
-          <div className="flex">
-            <aside className="w-1/5 px-4 pr-2">
-              <h2 className="text-xl font-bold mb-4">Categories</h2>
-              <ul>
+          <div className="flex flex-col md:flex-row">
+            <aside className="w-full md:w-1/5 px-4 pr-2 mb-6 md:mb-0">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold mb-4">Categories</h2>
+              </div>
+              <ul className="flex flex-wrap md:flex-col gap-2 md:gap-0">
                 {categories.map((category, index) => (
                   <li key={index} className="mb-2">
                     <button
                       onClick={() => setSelectedCategory(category)}
-                      className={` transition-all duration-300 transform hover:translate-x-2 hover:scale-105 ${selectedCategory === category ? 'font-bold  bg-gradient-to-tr from-blue-500 to-blue-300 bg-clip-text text-transparent ' : ''}`}
+                      className={`text-xs md:text-base transition-all duration-300 transform hover:translate-x-2 hover:scale-105 ${
+                        selectedCategory === category ? 'font-bold bg-gradient-to-tr from-blue-500 to-blue-300 bg-clip-text text-transparent' : ''
+                      }`}
                     >
                       {category}
                     </button>
@@ -207,7 +211,7 @@ export default function CollectionPage() {
                 <li className="mb-2">
                   <button
                     onClick={() => setSelectedCategory(null)}
-                    className={`${selectedCategory === null ? 'font-bold  bg-gradient-to-tr from-blue-500 to-blue-300 bg-clip-text text-transparent ' : ''}`}
+                    className={`${selectedCategory === null ? 'font-bold bg-gradient-to-tr from-blue-500 to-blue-300 bg-clip-text text-transparent ' : ''}`}
                   >
                     All Products
                   </button>
@@ -215,9 +219,9 @@ export default function CollectionPage() {
               </ul>
             </aside>
 
-            <div className="w-4/5 px-2">
+            <div className="w-full md:w-4/5 px-2">
               <motion.div
-                className="grid grid-cols-3 gap-10"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10"
                 variants={container}
                 initial="hidden"
                 animate="visible"
@@ -225,7 +229,7 @@ export default function CollectionPage() {
                 {filteredProducts.map((product) => (
                   <motion.div key={product._id} variants={item} className="relative group">
                     <Link href={`/products/${product._id}`}>
-                      <div className="relative w-full h-96 mb-4 overflow-hidden rounded-lg">
+                      <div className="relative w-full h-64 md:h-96 mb-4 overflow-hidden rounded-lg">
                         <Image
                           src={`${process.env.NEXT_PUBLIC_S3_URL}${product.image}`}
                           alt={product.name}
@@ -248,9 +252,9 @@ export default function CollectionPage() {
                         </Magnetic>
                       </div>
 
-                      <div className="flex flex-col items-center">
-                        <h3 className="text-2xl font-medium">{product.name}</h3>
-                        <p className="text-sm text-gray-400 mt-1 mb-2">{product.description}</p>
+                      <div className="flex flex-col items-center text-center">
+                        <h3 className="text-xl md:text-2xl font-medium">{product.name}</h3>
+                        <p className="text-xs md:text-sm text-gray-400 mt-1 mb-2">{product.description}</p>
                         <p className="text-sm text-gray-300">
                           {product.discount && product.discount > 0 ? (
                             <>
@@ -277,7 +281,6 @@ export default function CollectionPage() {
             </div>
           </div>
         </main>
-
       </div>
     </div>
   )
