@@ -132,25 +132,34 @@ export default function CartPage() {
         Your browser does not support the video tag.
       </video>
 
-    <div ref={contentRef} className="relative z-50 px-24 p-10 text-white font-glorich ">
+    <div ref={contentRef} className="relative z-50 px-4 sm:px-8 md:px-16 lg:px-24 py-6 sm:py-10 text-white font-glorich">
     
-      <div className="logo flex items-center justify-center">
+      <div className="logo flex items-center justify-center mb-6">
         <Link href="/collections/all">
           <Image src="/images/gorba.png" alt="logo" width={70} height={70} />
         </Link>
       </div>
      
-      <h1 className="text-3xl font-bold mb-8 p-3 flex items-center justify-center">Your Cart</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center">Your Cart</h1>
       {cart.length === 0 ? (
-        <p>Your cart is empty.</p>
+        <p className="text-center">Your cart is empty.</p>
       ) : (
         <>
           {cart.map((item) => (
-            <div key={item._id} className="flex items-center mb-4 border-b border-gray-300/40 pb-4">
-              <Image src={item.image} alt={item.name} width={150} height={150} className="rounded-md mr-2" />
-              <div className="flex-grow">
-                <h2 className="text-xl font-semibold">{item.name}</h2>
-                <div className="flex items-center mt-2">
+            <div key={item._id} className="flex flex-col sm:flex-row items-start sm:items-center mb-6 border-b border-gray-300/40 pb-4">
+              <div className="w-full sm:w-auto flex justify-center sm:justify-start mb-4 sm:mb-0">
+                <Image 
+                  src={item.image} 
+                  alt={item.name} 
+                  width={100} 
+                  height={100} 
+                  className="rounded-md"
+                />
+              </div>
+              
+              <div className="flex-grow px-4 text-center sm:text-left">
+                <h2 className="text-lg sm:text-xl font-semibold">{item.name}</h2>
+                <div className="flex items-center justify-center sm:justify-start mt-2">
                   {item.discount && item.discount > 0 ? (
                     <>
                       <p className="text-gray-400 line-through mr-2">₹{item.price.toFixed(2)}</p>
@@ -161,7 +170,7 @@ export default function CartPage() {
                   )}
                 </div>
 
-                <div className="flex items-center mt-2">
+                <div className="flex items-center justify-center sm:justify-start mt-2">
                   <button
                     onClick={() => handleQuantityChange(item._id, item.quantity - 1)}
                     className="text-white px-2   rounded-full hover:scale-105 transition-transform duration-200 hover:text-red-400"

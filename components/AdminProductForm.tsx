@@ -114,7 +114,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
       {isLoading && <ProductAnimation />}
       
       {/* Product form with responsive styling */}
-      <form onSubmit={handleSubmit} className="mb-10 w-full lg:w-auto p-4">
+      <form onSubmit={handleSubmit} className="mb-10 w-full lg:w-auto p-4 ">
         {/* Product name input */}
         <input
           type="text"
@@ -141,7 +141,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           onChange={(e) => setPrice(e.target.value)}
           placeholder="Price"
           required
-          className="mb-4 p-2 w-full lg:w-[80%] backdrop-blur-sm bg-transparent border border-zinc-600 text-zinc-100 rounded-md hover:scale-105 transition-all duration-300"
+          className="mb-4 p-2 w-full lg:w-[80%] backdrop-blur-sm bg-transparent border border-zinc-600 text-white rounded-md hover:scale-105 transition-all duration-300"
         />
 
         {/* Discount input */}
@@ -160,7 +160,7 @@ export default function AdminProductForm({ onProductAdded }: AdminProductFormPro
           required
           className="flex mb-4 p-2 w-full lg:w-6/12 backdrop-blur-sm bg-transparent border border-zinc-600 text-zinc-100 rounded-md  transition-all duration-300 hover:scale-105"
         >
-          <option className='bg-zinc-800 text-zinc-100 ' value="">Select Category</option>
+          <option className='bg-zinc-800 text-zinc-800 ' value="">Select Category</option>
           {categories.map((cat) => (
             <option className='bg-zinc-800  text-zinc-300  backdrop-blur-md' key={cat} value={cat}>{cat}</option>
           ))}

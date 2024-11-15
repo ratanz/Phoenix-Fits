@@ -152,7 +152,7 @@ export default function CollectionPage() {
         ref={contentRef}
       >
         <header className="flex justify-between items-center mb-8 px-4">
-          <nav className='hidden md:flex'>
+          <nav className='hidden md:flex md:flex-col'>
             <Link href="/contact" className="hover:text-gray-300 text-lg  bg-gradient-to-tr from-blue-500 to-blue-300 bg-clip-text text-transparent ">Contact</Link>
             <LiveClockUpdate />
           </nav>
@@ -229,7 +229,7 @@ export default function CollectionPage() {
                 {filteredProducts.map((product) => (
                   <motion.div key={product._id} variants={item} className="relative group">
                     <Link href={`/products/${product._id}`}>
-                      <div className="relative w-full h-64 md:h-96 mb-4 overflow-hidden rounded-lg">
+                      <div className="relative w-full h-64 md:h-96 mb-2 overflow-hidden rounded-lg">
                         <Image
                           src={`${process.env.NEXT_PUBLIC_S3_URL}${product.image}`}
                           alt={product.name}
@@ -254,7 +254,7 @@ export default function CollectionPage() {
 
                       <div className="flex flex-col items-center text-center">
                         <h3 className="text-xl md:text-2xl font-medium">{product.name}</h3>
-                        <p className="text-xs md:text-sm text-gray-400 mt-1 mb-2">{product.description}</p>
+                        <p className="text-xs md:text-xs text-gray-400 mt-1 mb-2">{product.description}</p>
                         <p className="text-sm text-gray-300">
                           {product.discount && product.discount > 0 ? (
                             <>
