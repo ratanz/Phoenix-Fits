@@ -142,73 +142,86 @@ export default function CartPage() {
      
       <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center">Your Cart</h1>
       {cart.length === 0 ? (
-        <p className="text-center">Your cart is empty.</p>
+        <div className="text-center">
+          <p className="mb-4">Your cart is empty.</p>
+          <Link 
+            href="/collections/all"
+            className="inline-block bg-transparent backdrop-blur-sm border border-zinc-500/50 text-white px-6 py-2 rounded-xl hover:scale-105 transition-all duration-300"
+          >
+            Continue Shopping
+          </Link>
+        </div>
       ) : (
         <>
           {cart.map((item) => (
-            <div key={item._id} className="flex flex-col sm:flex-row items-start sm:items-center mb-6 border-b border-gray-300/40 pb-4">
-              <div className="w-full sm:w-auto flex justify-center sm:justify-start mb-4 sm:mb-0">
+            <div key={item._id} className="flex flex-col sm:flex-row items-center gap-4 mb-6 border-b border-gray-300/40 pb-6">
+              <div className="w-full sm:w-32 flex justify-center">
                 <Image 
                   src={item.image} 
                   alt={item.name} 
-                  width={100} 
-                  height={100} 
-                  className="rounded-md"
+                  width={120} 
+                  height={120} 
+                  className="rounded-lg object-cover"
                 />
               </div>
               
-              <div className="flex-grow px-4 text-center sm:text-left">
-                <h2 className="text-lg sm:text-xl font-semibold">{item.name}</h2>
-                <div className="flex items-center justify-center sm:justify-start mt-2">
+              <div className="flex-grow text-center sm:text-left">
+                <h2 className="text-lg sm:text-xl font-semibold mb-2">{item.name}</h2>
+                <div className="flex items-center justify-center sm:justify-start gap-2">
                   {item.discount && item.discount > 0 ? (
                     <>
-                      <p className="text-gray-400 line-through mr-2">₹{item.price.toFixed(2)}</p>
+                      <p className="text-gray-400 line-through">₹{item.price.toFixed(2)}</p>
                       <p className="text-green-400">₹{(item.price - item.discount).toFixed(2)}</p>
                     </>
                   ) : (
                     <p className="text-gray-400">₹{item.price.toFixed(2)}</p>
                   )}
                 </div>
+              </div>
 
-                <div className="flex items-center justify-center sm:justify-start mt-2">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex items-center justify-center border border-zinc-500/50 rounded-lg px-2">
                   <button
                     onClick={() => handleQuantityChange(item._id, item.quantity - 1)}
                     className="text-white px-2   rounded-full hover:scale-105 transition-transform duration-200 hover:text-red-400"
                   >
                     -
                   </button>
-                  <span className="mx-2">{item.quantity}</span>
+                  <span className="mx-4 min-w-[20px] text-center">{item.quantity}</span>
                   <button
                     onClick={() => handleQuantityChange(item._id, item.quantity + 1)}
-                    className="text-white px-2 py-1 rounded-md hover:scale-105 transition-transform duration-200 hover:text-green-400"
+                    className="text-white px-3 py-1 hover:text-green-400 text-lg"
                   >
                     +
                   </button>
                 </div>
+
+                <p className="text-lg font-semibold whitespace-nowrap">
+                  ₹{((item.discount && item.discount > 0 ? item.price - item.discount : item.price) * item.quantity).toFixed(2)}
+                </p>
               </div>
 
-              <p className="text-xl font-semibold mr-4">
-                ₹{((item.discount && item.discount > 0 ? item.price - item.discount : item.price) * item.quantity).toFixed(2)}
-              </p>
-              <button
-                onClick={() => removeFromCart(item._id)}
-                className="bg-gradient-to-tr from-red-500/90  to-zinc-900  text-white px-4 py-2 rounded-xl hover:scale-105 transition-all duration-300"
-              >
-                Remove
-              </button>
-              <button
-                onClick={() => handlePayment(item._id)}
-                className="bg-transparent backdrop-blur-sm text-white px-4 py-2 rounded-xl ml-4 hover:scale-105 transition-all duration-300"
-              >
-                Buy Now
-              </button>
+              <div className="flex flex-row sm:flex-col gap-2">
+                <button
+                  onClick={() => removeFromCart(item._id)}
+                  className="bg-gradient-to-tr from-red-500/90 to-zinc-900 text-white px-3 py-1.5 rounded-lg hover:scale-105 transition-all duration-300 text-sm"
+                >
+                  Remove
+                </button>
+                <button
+                  onClick={() => handlePayment(item._id)}
+                  className="bg-transparent backdrop-blur-sm border border-zinc-500/50 text-white px-3 py-1.5 rounded-lg hover:scale-105 transition-all duration-300 text-sm"
+                >
+                  Buy Now
+                </button>
+              </div>
             </div>
           ))}
           
-          <div className="mt-8 flex flex-col items-center justify-center p-4">
-            <p className="text-2xl font-bold">Subtotal: ₹{total.toFixed(2)}</p>
+          <div className="mt-8 flex flex-col items-center justify-center p-4 border-t border-zinc-500/50">
+            <p className="text-xl sm:text-2xl font-bold mb-4">Subtotal: ₹{total.toFixed(2)}</p>
             <button
-              className="bg-transparent border border-zinc-600/50 text-white mt-2 p-2 px-4 rounded-xl mr-2 hover:scale-105 transition-all duration-300 hover:bg-gradient-to-tr from-green-500/90  to-zinc-900 " 
+              className="w-full sm:w-auto bg-transparent border border-zinc-600/50 text-white px-8 py-2 rounded-xl hover:scale-105 transition-all duration-300 hover:bg-gradient-to-tr from-green-500/90 to-zinc-900"
               onClick={() => handlePayment()}
             >
               Checkout with Razorpay
