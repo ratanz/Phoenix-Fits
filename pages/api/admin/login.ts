@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } else {
       res.status(401).json({ message: 'Invalid credentials' });
     }
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
