@@ -12,7 +12,7 @@ export default function Landing() {
     // Simulate loading time
     const timer = setTimeout(() => {
       setIsLoading(false)
-    }, 1000) // Adjust this time as needed
+    }, 300) 
 
     return () => clearTimeout(timer)
   }, [])

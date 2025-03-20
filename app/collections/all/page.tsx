@@ -39,6 +39,7 @@ const item = {
 }
 
 export default function CollectionPage() {
+  
   const { data: session } = useSession()
   const { cart, addToCart } = useCart();
   const [products, setProducts] = useState<Product[]>([])
@@ -83,8 +84,8 @@ export default function CollectionPage() {
       // Use GSAP to animate content sliding up and fading in
       gsap.fromTo(
         contentRef.current,
-        { opacity: 0, y: 90 }, // Start state
-        { opacity: 1, y: 0, duration: 1.1, ease: 'power3.out' } // End state
+        { opacity: 0, y: 90 }, 
+        { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' } 
       )
     }
   }, [loading])
